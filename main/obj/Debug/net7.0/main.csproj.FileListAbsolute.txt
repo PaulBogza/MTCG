@@ -1,0 +1,15 @@
+/home/nero/Code/WS2023/SWEN/MTCG/main/obj/Debug/net7.0/main.csproj.AssemblyReference.cache
+/home/nero/Code/WS2023/SWEN/MTCG/main/obj/Debug/net7.0/main.GeneratedMSBuildEditorConfig.editorconfig
+/home/nero/Code/WS2023/SWEN/MTCG/main/obj/Debug/net7.0/main.AssemblyInfoInputs.cache
+/home/nero/Code/WS2023/SWEN/MTCG/main/obj/Debug/net7.0/main.AssemblyInfo.cs
+/home/nero/Code/WS2023/SWEN/MTCG/main/obj/Debug/net7.0/main.csproj.CoreCompileInputs.cache
+/home/nero/Code/WS2023/SWEN/MTCG/main/bin/Debug/net7.0/main
+/home/nero/Code/WS2023/SWEN/MTCG/main/bin/Debug/net7.0/main.deps.json
+/home/nero/Code/WS2023/SWEN/MTCG/main/bin/Debug/net7.0/main.runtimeconfig.json
+/home/nero/Code/WS2023/SWEN/MTCG/main/bin/Debug/net7.0/main.dll
+/home/nero/Code/WS2023/SWEN/MTCG/main/bin/Debug/net7.0/main.pdb
+/home/nero/Code/WS2023/SWEN/MTCG/main/obj/Debug/net7.0/main.dll
+/home/nero/Code/WS2023/SWEN/MTCG/main/obj/Debug/net7.0/refint/main.dll
+/home/nero/Code/WS2023/SWEN/MTCG/main/obj/Debug/net7.0/main.pdb
+/home/nero/Code/WS2023/SWEN/MTCG/main/obj/Debug/net7.0/main.genruntimeconfig.cache
+/home/nero/Code/WS2023/SWEN/MTCG/main/obj/Debug/net7.0/ref/main.dll
