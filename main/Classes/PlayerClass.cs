@@ -1,9 +1,8 @@
 using System;
-using System.Reflection.Metadata.Ecma335;
 using CardClasses;
 
 namespace PlayerClasses{
-    class Player{
+    public class Player{
         private int _elo = 100;
         public int elo{
             get{return _elo;}
@@ -21,5 +20,13 @@ namespace PlayerClasses{
         }
         private Card[] Stack = new Card[64];
         private Card[] Deck = new Card[4];
+
+        public void Attack(Card Target){
+
+        }
+
+        public void Trade(Player OtherPlayer){
+
+        }
     }
 }
