@@ -1,10 +1,24 @@
 using System;
+using System.Reflection.Metadata.Ecma335;
 using CardClasses;
 
 namespace PlayerClasses{
     class Player{
-        private int ELO {get; set;} = 100;
-        private int coins {get; set;} = 20;
+        private int _elo = 100;
+        public int elo{
+            get{return _elo;}
+            set{_elo = value;}
+        }
+        private int _coins = 20;
+        public int coins{
+            get{return _coins;}
+            set{_coins = value;}
+        }
+
+        public Player(int elo, int coins){
+            _elo = elo;
+            _coins = coins;
+        }
         private Card[] Stack = new Card[64];
         private Card[] Deck = new Card[4];
     }
