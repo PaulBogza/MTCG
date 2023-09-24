@@ -27,7 +27,6 @@ namespace CardClasses{
             get{return _type;}
             set{_type = value;}
         }
-        public abstract void Attack(Card Target);
     }
 
     public class MonsterCard : Card{
@@ -48,9 +47,6 @@ namespace CardClasses{
             _element = element;
             _type = type;
         }
-        public override void Attack(Card Target){
-            System.Console.WriteLine("{0} attacked {1}", this.name, Target.name);
-        }
     }
 
     public class SpellCard : Card{
@@ -69,9 +65,6 @@ namespace CardClasses{
             _damage = damage;
             _element = element;
             _type = type;
-        }
-        public override void Attack(Card Target){
-            System.Console.WriteLine("{0} used against {1}", this.name, Target.name);
         }
     }
 }
