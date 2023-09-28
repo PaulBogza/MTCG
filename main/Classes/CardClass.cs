@@ -1,70 +1,44 @@
 using System;
 
-namespace CardClasses{
+namespace CardClass{
     public enum ElementType{
         Normal, 
         Fire, 
         Water
     };
     abstract public class Card{
-        protected string _name= "TBD";
-        public string name{
-            get{return _name;}
-            set{_name = value;}
+        protected string _Name= "TBD";
+        public string Name{
+            get{return _Name;}
+            set{_Name = value;}
         }
-        protected int _damage;
-        public int damage{
-            get{return _damage;}
-            set{_damage = value;}
+        protected int _Damage;
+        public int Damage{
+            get{return _Damage;}
+            set{_Damage = value;}
         }
-        protected ElementType _element;
-        public ElementType element{
-            get{return _element;}
-            set{_element = value;}
+        protected ElementType _Element;
+        public ElementType Element{
+            get{return _Element;}
+            set{_Element = value;}
         }
-        protected string _type = "TBD";
-        public string type{
-            get{return _type;}
-            set{_type = value;}
+        protected string _Type = "TBD";
+        public string Type{
+            get{return _Type;}
+            set{_Type = value;}
         }
-    }
 
-    public class MonsterCard : Card{
-        private int _healthPoints;
-        public int healthPoints {
-            get{return _healthPoints;}
-            set{_healthPoints = value;}
-        }
-        private bool _isScared = false;
-        public bool isScared{
-            get{return _isScared;}
-            set{_isScared = value;}
-        }
-        public MonsterCard(string name, int damage, int healthPoints, ElementType element, string type){
-            _name = name;
-            _damage = damage;
-            _healthPoints = healthPoints;
-            _element = element;
-            _type = type;
-        }
-    }
-
-    public class SpellCard : Card{
-        private bool _effective = true;
-        public bool effective{
-            get{return _effective;}
-            set{_effective = value;}
-        }
-        private bool _effect = true;
-        public bool effect{
-            get{return _effect;}
-            set{_effect = value;}
-        }
-        public SpellCard(string name, int damage, ElementType element, string type){
-            _name = name;
-            _damage = damage;
-            _element = element;
-            _type = type;
+        public virtual Card Attack(Card Target){
+            System.Console.WriteLine("{0} Attacking {1}",this.Name, Target.Name);
+            if(this.Damage > Target.Damage){
+                return this; 
+            }
+            else if(this.Damage == Target.Damage){
+                return null;
+            }
+            else{
+                return Target;
+            }
         }
     }
 }

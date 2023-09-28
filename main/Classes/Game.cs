@@ -1,6 +1,6 @@
 using System;
-using PlayerClasses;
-using CardClasses;
+using PlayerClass;
+using CardClass;
 using System.ComponentModel;
 
 namespace GameClass{
@@ -8,35 +8,42 @@ namespace GameClass{
     public sealed class Game{
         //private constructor to enforce the GameInstance method 
         private Game(){}
-        private static Game _gameInstance;
+        private static Game _GameInstance;
         //Thread safe implementation?, idk found it online
         private static readonly object _lock = new object();
-        public static Game GameInstance(string value){
-            if(_gameInstance == null){
+        public static Game GetInstance(){
+            if(_GameInstance == null){
                 lock(_lock){
-                    if(_gameInstance == null){
-                        _gameInstance = new Game();
-                        _gameInstance.value = value;
+                    if(_GameInstance == null){
+                        _GameInstance = new Game();
                     }
                 }
             }
-            return _gameInstance;
+            return _GameInstance;
         }
-        public string value { get; set; }
         
-        private int _rounds;
-        public int rounds{
-            get{return _rounds;}
-            set{_rounds = value;}
+        private int _Rounds;
+        public int Rounds{
+            get{return _Rounds;}
+            set{_Rounds = value;}
         }
 
-        private string _winner = "TBD";
-        public string winner{
-            get{return _winner;}
-            set{_winner = value;}
+        private string _Winner = "TBD";
+        public string Winner{
+            get{return _Winner;}
+            set{_Winner = value;}
         }
         public void StartGame(Player Player1, Player Player2){
-            System.Console.WriteLine("Get ready for the next battle");
+            System.Console.WriteLine("==================Monster Trading Carde Game=================");
+            System.Console.WriteLine("1.) Play");
+            System.Console.WriteLine("2.) Trade");
+            System.Console.WriteLine("=============================================================");
+            
+        }
+        public void Trade(Player Player1, Player Player2){
+            System.Console.WriteLine("================Marketplace==============");
+            System.Console.WriteLine("{0} wants to trade with {1}! Trade {2} for {3}?", Player1.Name, Player2.Name, Player1.Stack.ElementAt(1), Player2.Stack.ElementAt(1));
+            System.Console.WriteLine("=========================================");
         }
     }
 }
