@@ -1,7 +1,7 @@
 using System;
 using CardClass;
 
-namespace SpellCard{
+namespace SpellCardClass{
     public class SpellCard : Card{
         private bool _Effective = true;
         public bool Effective{

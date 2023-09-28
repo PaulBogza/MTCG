@@ -1,5 +1,7 @@
 ﻿using System;
 using CardClass;
+using MonsterCardClass;
+using SpellCardClass;
 using PlayerClass;
 using GameClass;
 

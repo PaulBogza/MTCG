@@ -1,7 +1,7 @@
 using System;
 using CardClass;
 
-namespace MonsterCard{
+namespace MonsterCardClass{
     public class MonsterCard : Card{
         private int _HealthPoints;
         public int HealthPoints {

@@ -1,6 +1,4 @@
 using System;
-using System.Runtime.ConstrainedExecution;
-using System.Xml;
 using CardClass;
 
 namespace PlayerClass{
