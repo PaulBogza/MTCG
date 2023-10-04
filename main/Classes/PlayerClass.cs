@@ -3,7 +3,7 @@ using CardClass;
 
 namespace PlayerClass{
     public class Player{
-        private string _Name;
+        private string _Name = "TBD";
         public string Name{
             get{return _Name;}
             set{_Name = value;}

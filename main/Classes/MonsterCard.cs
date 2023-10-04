@@ -1,5 +1,6 @@
 using System;
 using CardClass;
+using ElementTypeEnum;
 
 namespace MonsterCardClass{
     public class MonsterCard : Card{
@@ -14,9 +15,6 @@ namespace MonsterCardClass{
             _HealthPoints = HealthPoints;
             _Element = Element;
             _Type = Type;
-        }
-        public override Card Attack(Card Target){
-            return Target;
         }
     }
 }

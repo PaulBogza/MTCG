@@ -41,9 +41,9 @@ namespace GameClass{
             
         }
         public void Trade(Player Player1, Player Player2){
-            System.Console.WriteLine("================Marketplace==============");
+            System.Console.WriteLine("==================Marketplace=================");
             System.Console.WriteLine("{0} wants to trade with {1}! Trade {2} for {3}?", Player1.Name, Player2.Name, Player1.Stack.ElementAt(1), Player2.Stack.ElementAt(1));
-            System.Console.WriteLine("=========================================");
+            System.Console.WriteLine("==============================================");
         }
     }
 }
