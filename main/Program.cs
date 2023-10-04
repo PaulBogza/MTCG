@@ -28,7 +28,7 @@ namespace myMTCG{
             MonsterCard Kraken = new MonsterCard("Takoyaki", 25, 50, ElementType.Water, "Wizard");
             MonsterCard Wizard = new MonsterCard("Saruman", 20, 15, ElementType.Normal, "Kraken");
 
-            newBattle.losingCard = newBattle.Fight(Goblin, Dragon);
+            newBattle.losingCard = newBattle.Fight(FrostRay, Kraken);
 
             if(newBattle.losingCard == null){
                 System.Console.WriteLine("Draw");

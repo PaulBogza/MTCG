@@ -15,7 +15,7 @@ namespace BattleClass{
             }
 
             if(Card2.Type == "Dragon" || Card2.Type == "Knight" || Card2.Type == "Ork" || Card2.Type == "Wizard" || Card2.Type == "Kraken"){
-                tempDmg2 = checkSpecialInteraction(Card2, Card1);
+                tempDmg1 = checkSpecialInteraction(Card1, Card2);
             }
 
             if(Card1.Type == "Spell"){
@@ -40,26 +40,14 @@ namespace BattleClass{
             if(Card1.Element == ElementType.Water && Card2.Element == ElementType.Fire){
                 return Card1.Damage*2;
             }
-            else if(Card2.Element == ElementType.Water && Card1.Element == ElementType.Fire){
-                return Card2.Damage*2;
-            }
             else if(Card1.Element == ElementType.Fire && Card2.Element == ElementType.Normal){
                 return Card1.Damage*2;
-            }
-            else if(Card2.Element == ElementType.Fire && Card1.Element == ElementType.Normal){
-                return Card2.Damage*2;
             }
             else if(Card1.Element == ElementType.Normal && Card2.Element == ElementType.Water){
                 return Card1.Damage*2;
             }
-            else if(Card2.Element == ElementType.Normal && Card1.Element == ElementType.Water){
-                return Card2.Damage*2;
-            }
             else if(Card1.Element == ElementType.Fire && Card2.Element == ElementType.Water){
                 return Card1.Damage/2;
-            }
-            else if(Card2.Element == ElementType.Fire && Card1.Element == ElementType.Water){
-                return Card2.Damage/2;
             }
             else{
                 return Card1.Damage;
@@ -73,26 +61,14 @@ namespace BattleClass{
             else if(Card1.Type == "Ork" && Card2.Type == "Wizard"){
                 return Card1.Damage*0;
             }
-            else if(Card2.Type == "Ork" && Card1.Type == "Wizard"){
-                return Card2.Damage*0;
-            }
-            else if(Card1.Element == ElementType.Water && Card2.Type == "Knight"){
+            else if(Card1.Element == ElementType.Water && Card1.Type == "Spell" && Card2.Type == "Knight"){
                 return Card1.Damage*1000;
-            }
-            else if(Card2.Element == ElementType.Water && Card1.Type == "Knight"){
-                return Card2.Damage*1000;
             }
             else if(Card1.Type == "Spell" && Card2.Type == "Kraken"){
                 return Card1.Damage*0;
             }
-            else if(Card2.Type == "Spell" && Card1.Type == "Kraken"){
-                return Card2.Damage*0;
-            }
             else if(Card1.Type == "Dragon" && Card2.Type == "FireElf"){
                 return Card1.Damage*0;
-            }
-            else if(Card2.Type == "Dragon" && Card1.Type == "FireElf"){
-                return Card2.Damage*0;
             }
             else{
                 return Card1.Damage;
