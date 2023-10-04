@@ -10,11 +10,11 @@ namespace BattleClass{
             int tempDmg1 = Card1.Damage;
             int tempDmg2 = Card2.Damage;
 
-            if(Card1.Type == "Dragon" || Card1.Type == "Knight" || Card1.Type == "Ork" || Card1.Type == "Wizard" || Card1.Type == "Kraken"){
-                tempDmg1 = checkSpecialInteraction(Card1, Card2);
+            if(Card1.Type == "Dragon" || Card1.Type == "Knight" || Card1.Type == "Ork" || Card1.Type == "Wizard" || Card1.Type == "Kraken" || Card1.Type == "FireElf"){
+                tempDmg2 = checkSpecialInteraction(Card2, Card1);
             }
 
-            if(Card2.Type == "Dragon" || Card2.Type == "Knight" || Card2.Type == "Ork" || Card2.Type == "Wizard" || Card2.Type == "Kraken"){
+            if(Card2.Type == "Dragon" || Card2.Type == "Knight" || Card2.Type == "Ork" || Card2.Type == "Wizard" || Card2.Type == "Kraken" || Card2.Type == "FireElf"){
                 tempDmg1 = checkSpecialInteraction(Card1, Card2);
             }
 
