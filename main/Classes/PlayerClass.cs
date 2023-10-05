@@ -23,13 +23,13 @@ namespace PlayerClass{
             _Elo = Elo;
             _Coins = Coins;
         }
-        private List<Card> _Stack;
-        public List<Card> Stack{
+        private List<Card> ?_Stack;
+        public List<Card> ?Stack{
             get{return _Stack;}
             set{_Stack = value;}
         }
-        private List<Card> _Deck;
-        public List<Card> Deck{
+        private List<Card> ?_Deck;
+        public List<Card> ?Deck{
             get{return _Deck;}
             set{_Deck = value;}
         }
