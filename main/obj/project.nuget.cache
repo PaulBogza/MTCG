@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2HYGkLBdMX2xnWDco9lIKWWYkHvppmKXc+2mKPjPmvTH86c1oZzd85k+SEb9YCGHwPum7U7a4Qbw4qknPZpgBg==",
+  "dgSpecHash": "ic0kDhw3iypa9/C6kIe0mg1u4RNnDbvGBy7m9XchJ4qFvdzz3AkirPq7cQsVuwp6kCNShpVP+cn8Dx+32KDAvg==",
   "success": true,
-  "projectFilePath": "/home/nero/Code/WS2023/SWEN/MTCG/main/main.csproj",
+  "projectFilePath": "C:\\Users\\Paul\\source\\repos\\MTCG\\main\\main.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
