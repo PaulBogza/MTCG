@@ -5,8 +5,8 @@ using ElementTypeEnum;
 namespace BattleClass{
     public class Battle{
 
-        public Card losingCard = null;
-        public Card Fight(Card Card1, Card Card2){
+        public Card? losingCard = null;
+        public Card? Fight(Card Card1, Card Card2){
             int tempDmg1 = Card1.Damage;
             int tempDmg2 = Card2.Damage;
 

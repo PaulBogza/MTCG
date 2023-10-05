@@ -8,7 +8,7 @@ namespace GameClass{
     public sealed class Game{
         //private constructor to enforce the GameInstance method 
         private Game(){}
-        private static Game _GameInstance;
+        private static Game? _GameInstance;
         //Thread safe implementation?, idk found it online
         private static readonly object _lock = new object();
         public static Game GetInstance(){
