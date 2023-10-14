@@ -15,6 +15,7 @@ using DB.Connection;
 namespace myMTCG{
     class Program{
         static void Main(string[] args){
+            System.Console.WriteLine("test");
             /*
             //singleton implementation
             Game newGame = Game.GetInstance();
@@ -43,9 +44,20 @@ namespace myMTCG{
                 System.Console.WriteLine("{0} lost this battle",newBattle.losingCard.Name);
             }
             */
-            Connection newConn = new Connection();
+            var connString = "Server=172.17.0.2;Port=5432;Database=mydb;Username=postgres;Password=postgres;Persist Security Info=True";
+            using var conn = new NpgsqlConnection(connString);
+            conn.Open();
+            Console.WriteLine("Opened");
+                        
 
-            newConn.TryConnection();
+            using (var cmd = new NpgsqlCommand("CREATE TABLE IF NOT EXISTS test (id INT PRIMARY KEY);", conn))
+            {
+                cmd.ExecuteNonQuery();
+                Console.WriteLine("Executed");
+            }
+
+            conn.Close(); 
+
         }
     }
 }
