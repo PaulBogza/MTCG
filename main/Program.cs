@@ -7,10 +7,15 @@ using GameClass;
 using ElementTypeEnum;
 using BattleClass;
 using System.Runtime.ConstrainedExecution;
+using Npgsql;
+using DB.Connection;
+
+//TRY RACE ENUM INSTEAD OF TYPE STRINGP
 
 namespace myMTCG{
     class Program{
         static void Main(string[] args){
+            /*
             //singleton implementation
             Game newGame = Game.GetInstance();
             Battle newBattle = new Battle();
@@ -37,7 +42,10 @@ namespace myMTCG{
             else{
                 System.Console.WriteLine("{0} lost this battle",newBattle.losingCard.Name);
             }
+            */
+            Connection newConn = new Connection();
 
+            newConn.TryConnection();
         }
     }
 }
