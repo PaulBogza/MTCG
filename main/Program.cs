@@ -6,9 +6,9 @@ using PlayerClass;
 using GameClass;
 using ElementTypeEnum;
 using BattleClass;
-using System.Runtime.ConstrainedExecution;
 using Npgsql;
-using DB.Connection;
+using System.Runtime.ConstrainedExecution;
+
 
 //TRY RACE ENUM INSTEAD OF TYPE STRINGP
 
@@ -44,7 +44,8 @@ namespace myMTCG{
                 System.Console.WriteLine("{0} lost this battle",newBattle.losingCard.Name);
             }
             */
-            var connString = "Server=172.17.0.2;Port=5432;Database=mydb;Username=postgres;Password=postgres;Persist Security Info=True";
+            
+            var connString = "Host=127.0.0.1;Port=5432;Database=mydb;Username=postgres;Password=postgres;Persist Security Info=True";
             using var conn = new NpgsqlConnection(connString);
             conn.Open();
             Console.WriteLine("Opened");
@@ -57,7 +58,6 @@ namespace myMTCG{
             }
 
             conn.Close(); 
-
         }
     }
 }
