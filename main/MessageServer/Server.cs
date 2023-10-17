@@ -1,3 +1,4 @@
+/*
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -20,5 +21,5 @@ Socket serverSock = new Socket(
 
         int length = clientSock.Receive(buffer, 0 ,1024, SocketFlags.None);
         string input = Encoding.ASCII.GetString(buffer, 0, length);
-
+*/
 
