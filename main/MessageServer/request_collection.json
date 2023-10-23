@@ -1,0 +1,286 @@
+{
+	"info": {
+		"_postman_id": "aa5f5cc7-36a1-438b-b719-b47d222ca799",
+		"name": "Message Server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17867956"
+	},
+	"item": [
+		{
+			"name": "Register User",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"berger\",\r\n    \"password\": \"test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:10001/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "10001",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"berger\",\r\n    \"password\": \"test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:10001/sessions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "10001",
+					"path": [
+						"sessions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Message",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer berger-msgToken",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "message",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:10001/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "10001",
+					"path": [
+						"messages"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Message 1",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer berger-msgToken",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "updated message",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:10001/messages/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "10001",
+					"path": [
+						"messages",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Message 1",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer berger-msgToken",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:10001/messages/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "10001",
+					"path": [
+						"messages",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List All Messages",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer berger-msgToken",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:10001/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "10001",
+					"path": [
+						"messages"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show Message 1",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer berger-msgToken",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:10001/messages/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "10001",
+					"path": [
+						"messages",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show Message 3",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer berger-msgToken",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:10001/messages/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "10001",
+					"path": [
+						"messages",
+						"3"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

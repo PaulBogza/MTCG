@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MessageServer.HttpServer.Response
+namespace SWE1.MessageServer.HttpServer.Response
 {
     internal class HttpResponse
     {

@@ -8,6 +8,12 @@ using ElementTypeEnum;
 using BattleClass;
 using Npgsql;
 using System.Runtime.ConstrainedExecution;
+using SWE1.MessageServer.API.Routing;
+using SWE1.MessageServer.BLL;
+using SWE1.MessageServer.DAL;
+using SWE1.MessageServer.HttpServer;
+using SWE1.MessageServer.Models;
+using System.Net;
 
 
 //TRY RACE ENUM INSTEAD OF TYPE STRINGP
@@ -15,49 +21,53 @@ using System.Runtime.ConstrainedExecution;
 namespace myMTCG{
     class Program{
         static void Main(string[] args){
-            System.Console.WriteLine("test");
+            // Careful: right now, this program will not do anything due to the null-conditional operators (but it will not crash either)
+            // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/member-access-operators#null-conditional-operators--and-
+
+            var connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=swe1messagedb";
+            //IMessageDao messageDao = new InMemoryMessageDao();
+            //IUserDao userDao = new InMemoryUserDao();
+            IUserDao userDao = new DatabaseUserDao(connectionString);
+            IMessageDao messageDao = new DatabaseMessageDao(connectionString);
+
+            IMessageManager messageManager = new MessageManager(messageDao);
+            IUserManager userManager = new UserManager(userDao);
+
             /*
-            //singleton implementation
-            Game newGame = Game.GetInstance();
-            Battle newBattle = new Battle();
-            Player Player1 = new Player(100, 20);
-            Player Player2 = new Player(100, 20);
+            // Test: Register User
+            var credentials = new Credentials("user1", "pass");
+            userManager.RegisterUser(credentials);
+            var registeredUser = userDao.GetUserByCredentials(credentials.Username, credentials.Password);
+            Console.WriteLine($"Username: {registeredUser?.Username}, Password: {registeredUser?.Password}");
 
-            newGame.StartGame(Player1, Player2);
+            // Test: Login User
+            var user = userManager.LoginUser(credentials);
+            Console.WriteLine($"Username: {user.Username}, Token: {user.Token}");
 
-            MonsterCard Goblin = new MonsterCard("WaterGoblin", 1, ElementType.Water, "Goblin");
-            MonsterCard Elf = new MonsterCard("FireElf", 1, ElementType.Fire, "Elf");
-            SpellCard FrostRay = new SpellCard("FrostRay", 1, ElementType.Water, "Spell");
-            MonsterCard Dragon = new MonsterCard("Fortisax", 1, ElementType.Fire, "Dragon");
-            MonsterCard Knight = new MonsterCard("Black Knight", 1, ElementType.Normal, "Knight");
-            MonsterCard Ork = new MonsterCard("Ork", 1, ElementType.Normal, "Ork");
-            MonsterCard Kraken = new MonsterCard("Takoyaki", 1, ElementType.Water, "Kraken");
-            MonsterCard Wizard = new MonsterCard("Saruman", 1, ElementType.Normal, "Wizard");
-            MonsterCard FireElf = new MonsterCard("FireElf", 1 ,ElementType.Fire, "FireElf");
+            // Test: Add Messages
+            var contents = Enumerable.Range(1, 10).Select(i => $"message {i}").ToList();
+            contents.ForEach(m => messageManager.AddMessage(user, m));
+            messageDao.GetMessages(user.Username).ToList().ForEach(m => Console.WriteLine($"Id: {m.Id}, Content: {m.Content}"));
 
-            newBattle.losingCard = newBattle.Fight(Dragon, FireElf);
+            // Test: List Messages
+            var messages = messageManager.ListMessages(user).ToList();
+            messages.ForEach(m => Console.WriteLine($"Id: {m.Id}, Content: {m.Content}"));
 
-            if(newBattle.losingCard == null){
-                System.Console.WriteLine("Draw");
-            }
-            else{
-                System.Console.WriteLine("{0} lost this battle",newBattle.losingCard.Name);
-            }
+            // Test: Update Message
+            messageManager.UpdateMessage(user, 2, "new message 2");
+
+            // Test: Show Message
+            var message = messageManager.ShowMessage(user, 2);
+            Console.WriteLine($"Id: {message.Id}, Content: {message.Content}");
+
+            // Test: Delete Message & List Messages
+            messageManager.RemoveMessage(user, 2);
+            messages = messageManager.ListMessages(user).ToList();
+            messages.ForEach(m => Console.WriteLine($"Id: {m.Id}, Content: {m.Content}"));
             */
-            
-            var connString = "Host=127.0.0.1;Port=5432;Database=mydb;Username=postgres;Password=postgres;Persist Security Info=True";
-            using var conn = new NpgsqlConnection(connString);
-            conn.Open();
-            Console.WriteLine("Opened");
-                        
-
-            using (var cmd = new NpgsqlCommand("CREATE TABLE IF NOT EXISTS test (id INT PRIMARY KEY);", conn))
-            {
-                cmd.ExecuteNonQuery();
-                Console.WriteLine("Executed");
-            }
-
-            conn.Close(); 
+            var router = new MessageRouter(userManager, messageManager);
+            var server = new HttpServer(router, IPAddress.Any, 10001);
+            server.Start(); 
         }
     }
 }
