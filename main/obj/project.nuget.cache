@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "ACl35FNarCaICSpg2TOm2TkEsXaznLQw1DQoXlMdVJqvcqww4CqZmsYbjO/yCBdeWfBbj5hcWAALt57pTFv7Tg==",
+  "dgSpecHash": "y+ExlIIjMwUNOjbsqifAL43Cx50RSgrLtMxt1QupgQpnhTsnrvepfHGSamTaonVp7MEI7KxLGP77uGWrgaRLhg==",
   "success": true,
   "projectFilePath": "/home/nero/Code/WS2023/SWEN/MTCG/main/main.csproj",
   "expectedPackageFiles": [
     "/home/nero/.nuget/packages/microsoft.extensions.logging.abstractions/6.0.0/microsoft.extensions.logging.abstractions.6.0.0.nupkg.sha512",
+    "/home/nero/.nuget/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512",
     "/home/nero/.nuget/packages/npgsql/7.0.6/npgsql.7.0.6.nupkg.sha512"
   ],
   "logs": []

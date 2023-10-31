@@ -24,7 +24,7 @@ namespace myMTCG{
             // Careful: right now, this program will not do anything due to the null-conditional operators (but it will not crash either)
             // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/member-access-operators#null-conditional-operators--and-
 
-            var connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=swe1messagedb";
+            var connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=mydb";
             //IMessageDao messageDao = new InMemoryMessageDao();
             //IUserDao userDao = new InMemoryUserDao();
             IUserDao userDao = new DatabaseUserDao(connectionString);
