@@ -24,17 +24,17 @@ namespace myMTCG{
             // Careful: right now, this program will not do anything due to the null-conditional operators (but it will not crash either)
             // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/member-access-operators#null-conditional-operators--and-
 
-            var connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=mydb";
-            //IMessageDao messageDao = new InMemoryMessageDao();
-            //IUserDao userDao = new InMemoryUserDao();
-            IUserDao userDao = new DatabaseUserDao(connectionString);
-            IMessageDao messageDao = new DatabaseMessageDao(connectionString);
+            //var connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=mydb";
+            IMessageDao messageDao = new InMemoryMessageDao();
+            IUserDao userDao = new InMemoryUserDao();
+            //IUserDao userDao = new DatabaseUserDao(connectionString);
+            //IMessageDao messageDao = new DatabaseMessageDao(connectionString);
 
             IMessageManager messageManager = new MessageManager(messageDao);
             IUserManager userManager = new UserManager(userDao);
 
-            /*
-            // Test: Register User
+            
+            //Test: Register User
             var credentials = new Credentials("user1", "pass");
             userManager.RegisterUser(credentials);
             var registeredUser = userDao.GetUserByCredentials(credentials.Username, credentials.Password);
@@ -64,10 +64,10 @@ namespace myMTCG{
             messageManager.RemoveMessage(user, 2);
             messages = messageManager.ListMessages(user).ToList();
             messages.ForEach(m => Console.WriteLine($"Id: {m.Id}, Content: {m.Content}"));
-            */
-            var router = new MessageRouter(userManager, messageManager);
-            var server = new HttpServer(router, IPAddress.Any, 10001);
-            server.Start(); 
+            
+            //var router = new MessageRouter(userManager, messageManager);
+            //var server = new HttpServer(router, IPAddress.Any, 10001);
+            //server.Start(); 
         }
     }
 }
