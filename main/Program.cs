@@ -15,9 +15,6 @@ using SWE1.MessageServer.HttpServer;
 using SWE1.MessageServer.Models;
 using System.Net;
 
-
-//TRY RACE ENUM INSTEAD OF TYPE STRINGP
-
 namespace myMTCG{
     class Program{
         static void Main(string[] args){
