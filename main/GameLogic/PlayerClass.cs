@@ -1,13 +1,10 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using CardClass;
+using SWE1.MessageServer.Models;
 
 namespace PlayerClass{
     public class Player{
-        private string _Name = "TBD";
-        public string Name{
-            get{return _Name;}
-            set{_Name = value;}
-        }
         private int _Elo = 100;
         public int Elo{
             get{return _Elo;}

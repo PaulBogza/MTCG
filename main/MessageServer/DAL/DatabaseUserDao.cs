@@ -1,9 +1,11 @@
 ﻿using Npgsql;
+using SWE1.MessageServer.BLL;
 using SWE1.MessageServer.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +34,6 @@ namespace SWE1.MessageServer.DAL
 
         public User? GetUserByCredentials(string username, string password)
         {
-            // TODO: handle exceptions
             User? user = null;
 
             using var connection = new NpgsqlConnection(_connectionString);
@@ -47,14 +48,15 @@ namespace SWE1.MessageServer.DAL
             if (reader.Read())
             {
                 user = ReadUser(reader);
+                return user;
             }
-
-            return user;
+            else{
+                throw new UserNotFoundException();
+            }
         }
-
+       
         public bool InsertUser(User user)
         {
-            // TODO: handle exceptions
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
 
@@ -62,13 +64,17 @@ namespace SWE1.MessageServer.DAL
             cmd.Parameters.AddWithValue("username", user.Username);
             cmd.Parameters.AddWithValue("password", user.Password);
             var affectedRows = cmd.ExecuteNonQuery();
-
-            return affectedRows > 0;
+            
+            if(affectedRows > 0){
+                return affectedRows > 0;
+            }
+            else{
+                throw new DuplicateUserException();
+            }
         }
 
         private void EnsureTables()
         {
-            // TODO: handle exceptions
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
             using var cmd = new NpgsqlCommand(CreateUserTableCommand, connection);
@@ -77,7 +83,6 @@ namespace SWE1.MessageServer.DAL
 
         private IEnumerable<User> GetAllUsers() 
         {
-            // TODO: handle exceptions
             var users = new List<User>();
 
             using var connection = new NpgsqlConnection(_connectionString);
@@ -85,13 +90,18 @@ namespace SWE1.MessageServer.DAL
 
             using var cmd = new NpgsqlCommand(SelectAllUsersCommand, connection);
             using var reader = cmd.ExecuteReader();
-            while (reader.Read())
-            {
-                var user = ReadUser(reader);
-                users.Add(user);
-            }
+            if(reader.Read()){
+                while (reader.Read())
+                {
+                    var user = ReadUser(reader);
+                    users.Add(user);
+                }
 
-            return users;
+                return users;
+            }
+            else{
+                throw new UserNotFoundException();
+            }
         }
 
         private User ReadUser(IDataRecord record)

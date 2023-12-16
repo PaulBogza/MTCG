@@ -1,5 +1,6 @@
 ﻿using Npgsql;
 using SWE1.MessageServer.API.Routing.Messages;
+using SWE1.MessageServer.BLL;
 using SWE1.MessageServer.Models;
 using System;
 using System.Collections.Generic;
@@ -33,30 +34,31 @@ namespace SWE1.MessageServer.DAL
         {
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
-
             using var cmd = new NpgsqlCommand(DeleteMessageCommand, connection);
             cmd.Parameters.AddWithValue("id", messageId);
             cmd.Parameters.AddWithValue("username", username);
-            cmd.ExecuteNonQuery();
+            if(cmd.ExecuteNonQuery() <= 0){
+                throw new MessageNotFoundException();
+            }
         }
 
         public Message? GetMessageById(string username, int messageId)
         {
             Message? message = null;
 
-            // TODO: handle exceptions
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
-
             using var cmd = new NpgsqlCommand(SelectMessageByIdCommand, connection);
             cmd.Parameters.AddWithValue("id", messageId);
             cmd.Parameters.AddWithValue("username", username);
-
             // take the first row, if any
             using var reader = cmd.ExecuteReader();
             if (reader.Read())
             {
                 message = ReadMessage(reader);
+            }
+            else{
+                throw new MessageNotFoundException();
             }
 
             return message;
@@ -66,7 +68,6 @@ namespace SWE1.MessageServer.DAL
         {
             var messages = new List<Message>();
 
-            // TODO: handle exceptions
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
 
@@ -85,7 +86,6 @@ namespace SWE1.MessageServer.DAL
 
         public void InsertMessage(string username, Message message)
         {
-            // TODO: handle exceptions
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
 
@@ -101,7 +101,6 @@ namespace SWE1.MessageServer.DAL
 
         public bool UpdateMessage(string username, Message message)
         {
-            // TODO: handle exceptions
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
 
@@ -112,11 +111,11 @@ namespace SWE1.MessageServer.DAL
 
             // ExecuteNonQuery returns the number of affected rows
             return cmd.ExecuteNonQuery() > 0;
+   
         }
 
         private void EnsureTables()
         {
-            // TODO: handle exceptions
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
 

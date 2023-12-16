@@ -11,7 +11,7 @@ namespace SWE1.MessageServer.API.Routing
     {
         public bool IsMatch(string resourcePath, string routePattern)
         {
-            var pattern = "^" + routePattern.Replace("{id}", ".*").Replace("/", "\\/") + "(\\?.*)?$";
+            var pattern = "^" + routePattern.Replace("{id}", ".*").Replace("/", "\\/") + "(\\?:.*)?$";
             return Regex.IsMatch(resourcePath, pattern);
         }
 
