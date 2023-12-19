@@ -1,3 +1,4 @@
+/*
 using CardClass;
 using PlayerClass;
 using SWE1.MessageServer.BLL;
@@ -11,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SWE1.MessageServer.API.Routing.Messages
-{
+
     internal class ShowCardsCommand : AuthenticatedRouteCommand
     {
         private readonly IMessageManager _messageManager;
@@ -33,6 +34,7 @@ namespace SWE1.MessageServer.API.Routing.Messages
             {
                 Stack = null;
             }
+            return Stack
 
             HttpResponse response;
             if (message == null)
@@ -49,3 +51,4 @@ namespace SWE1.MessageServer.API.Routing.Messages
 
     }
 }
+*/

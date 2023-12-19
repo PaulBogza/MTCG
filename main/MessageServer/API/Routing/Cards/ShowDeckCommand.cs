@@ -1,3 +1,4 @@
+/*
 using SWE1.MessageServer.BLL;
 using SWE1.MessageServer.HttpServer.Response;
 using SWE1.MessageServer.Models;
@@ -46,3 +47,4 @@ namespace SWE1.MessageServer.API.Routing.Messages
 
     }
 }
+*/

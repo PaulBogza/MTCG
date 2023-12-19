@@ -4,10 +4,13 @@ using SWE1.MessageServer.API.Routing.Users;
 using SWE1.MessageServer.BLL;
 using SWE1.MessageServer.HttpServer;
 using SWE1.MessageServer.HttpServer.Request;
+using SWE1.MessageServer.HttpServer.Response;
 using SWE1.MessageServer.HttpServer.Routing;
 using SWE1.MessageServer.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,10 +35,41 @@ namespace SWE1.MessageServer.API.Routing
 
         public IRouteCommand? Resolve(HttpRequest request)
         {
-            var isMatch = (string path) => _routeParser.IsMatch(path, "/messages/{id}");
-            var parseId = (string path) => int.Parse(_routeParser.ParseParameters(path, "/messages/{id}")["id"]);
-            var checkBody = (string? payload) => payload ?? throw new InvalidDataException();
+            bool isMatch(string path, string route){
+                bool matching = false;
+                if(path.StartsWith("/users") && route == "users"){
+                    matching = _routeParser.IsMatch(path, "/users/{id}");
+                }
+                else if(path.StartsWith("/tradings") && route == "tradings"){
+                    matching = _routeParser.IsMatch(path, "/tradings/{id}");
+                }
+                return matching;
+            }
 
+            int parseId(string path){
+                int val = 0;
+                if(path.StartsWith("/users")){
+                    val = int.Parse(_routeParser.ParseParameters(path, "/users/{id}")["id"]);
+                }
+                else if(path.StartsWith("/tradings")){
+                    val = int.Parse(_routeParser.ParseParameters(path, "/tradings/{id}")["id"]);
+                }     
+                return val;
+            };
+
+            string? parseParameters(string path){
+                string? parameter = null;
+                if(path.StartsWith("/users")){
+                    parameter = _routeParser.ParseParameters(path, "/users/{id}")["id"];
+                }
+                else if(path.StartsWith("/tradings")){
+                    parameter = _routeParser.ParseParameters(path, "/tradings/{id}")["id"];
+                }     
+                return parameter;
+            }
+
+            var checkBody = (string? payload) => payload ?? throw new InvalidDataException();
+   
             try
             {
                 return request switch
@@ -46,9 +80,12 @@ namespace SWE1.MessageServer.API.Routing
                     { Method: HttpMethod.Post, ResourcePath: "/messages" } => new AddMessageCommand(_messageManager, GetIdentity(request), checkBody(request.Payload)),
                     { Method: HttpMethod.Get, ResourcePath: "/messages" } => new ListMessagesCommand(_messageManager, GetIdentity(request)),
 
-                    { Method: HttpMethod.Get, ResourcePath: var path } when isMatch(path) => new ShowMessageCommand(_messageManager, GetIdentity(request), parseId(path)),
-                    { Method: HttpMethod.Put, ResourcePath: var path } when isMatch(path) => new UpdateMessageCommand(_messageManager, GetIdentity(request), parseId(path), checkBody(request.Payload)),
-                    { Method: HttpMethod.Delete, ResourcePath: var path } when isMatch(path) => new RemoveMessageCommand(_messageManager, GetIdentity(request), parseId(path)),
+                    //{ Method: HttpMethod.Get, ResourcePath: var path } when isMatch(path, "messages") => new ShowMessageCommand(_messageManager, GetIdentity(request), parseId(path)),
+                    //{ Method: HttpMethod.Put, ResourcePath: var path } when isMatch(path, "messages") => new UpdateMessageCommand(_messageManager, GetIdentity(request), parseId(path), checkBody(request.Payload)),
+                    //{ Method: HttpMethod.Delete, ResourcePath: var path } when isMatch(path, "messages") => new RemoveMessageCommand(_messageManager, GetIdentity(request), parseId(path)),
+
+                    { Method: HttpMethod.Get, ResourcePath: var path } when isMatch(path, "users") => new ShowUserCommand(_userManager, GetIdentity(request), parseParameters(path)),
+                    { Method: HttpMethod.Put, ResourcePath: var path } when isMatch(path, "users") => new UpdateUserCommand(_userManager, GetIdentity(request), checkBody(request.Payload), parseParameters(path)),
 
                     _ => null
                 };

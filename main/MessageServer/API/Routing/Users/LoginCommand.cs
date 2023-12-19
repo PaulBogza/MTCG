@@ -1,4 +1,5 @@
-﻿using SWE1.MessageServer.BLL;
+﻿using Newtonsoft.Json;
+using SWE1.MessageServer.BLL;
 using SWE1.MessageServer.HttpServer.Response;
 using SWE1.MessageServer.HttpServer.Routing;
 using SWE1.MessageServer.Models;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace SWE1.MessageServer.API.Routing.Users
@@ -39,8 +41,8 @@ namespace SWE1.MessageServer.API.Routing.Users
                 response = new HttpResponse(StatusCode.Unauthorized);
             }
             else
-            {
-                response = new HttpResponse(StatusCode.Ok, user.Token);
+            {   //ganzen user zurück geben, toString(user)
+                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(user.ToString()));
             }
 
             return response;

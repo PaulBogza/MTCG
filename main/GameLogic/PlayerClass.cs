@@ -5,6 +5,7 @@ using SWE1.MessageServer.Models;
 
 namespace PlayerClass{
     public class Player{
+        public string Name = "TBD";
         private int _Elo = 100;
         public int Elo{
             get{return _Elo;}

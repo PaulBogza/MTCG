@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace SWE1.MessageServer.API.Routing
     {
         public bool IsMatch(string resourcePath, string routePattern)
         {
-            var pattern = "^" + routePattern.Replace("{id}", ".*").Replace("/", "\\/") + "(\\?:.*)?$";
+            var pattern = "^" + routePattern.Replace("{id}", ".*").Replace("/", "\\/") + "(\\?.*)?$";
             return Regex.IsMatch(resourcePath, pattern);
         }
 

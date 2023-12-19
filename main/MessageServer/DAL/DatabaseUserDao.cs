@@ -27,6 +27,11 @@ namespace SWE1.MessageServer.DAL
             EnsureTables();
         }
 
+        //TODO: Make update user function for persistant database
+        public bool UpdateUser(User user, Dictionary<string, string> ?UserInfo){
+            user.UserInfo = UserInfo;
+            return true;
+        }
         public User? GetUserByAuthToken(string authToken)
         {
             return GetAllUsers().SingleOrDefault(u => u.Token == authToken);

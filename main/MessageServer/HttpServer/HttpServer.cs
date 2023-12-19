@@ -1,5 +1,6 @@
 ﻿using SWE1.MessageServer.HttpServer.Response;
 using SWE1.MessageServer.HttpServer.Routing;
+using SWE1.MessageServer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,6 +73,7 @@ namespace SWE1.MessageServer.HttpServer
             }
 
             handler.SendResponse(response);
+
         }
     }
 }
