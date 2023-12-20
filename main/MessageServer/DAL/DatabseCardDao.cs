@@ -1,6 +1,5 @@
 using CardClass;
 using Npgsql;
-using PlayerClass;
 using SWE1.MessageServer.BLL;
 using SWE1.MessageServer.Models;
 using System;
@@ -28,32 +27,38 @@ namespace SWE1.MessageServer.DAL
             _connectionString = connectionString;
             EnsureTables();
         }
-
-        public List<Card>? showCards(Player player){
-            if(player.Stack == null){
+        public List<Card>? CreatePackage(List<Card> Package){
+            Dictionary<int, List<Card>> GamePackage = new();
+            return Package;
+        }
+        public bool AquirePackage(User user){
+            return user.Coins < 4 ? false : true;
+        }
+        public List<Card>? ShowCards(User user){
+            if(user.Stack == null){
                 throw new Exception();
             }
             //TODO Get Users cards out of database
-            for(int i = 0; i < player.Stack.Count; i++){
-                System.Console.WriteLine(player.Stack[i].Name);
+            for(int i = 0; i < user.Stack.Count; i++){
+                System.Console.WriteLine(user.Stack[i].Name);
             }
-            return player.Stack;
+            return user.Stack;
         }
 
-        public List<Card>? showDeck(Player player){
-            if(player.Deck == null){
+        public List<Card>? ShowDeck(User user){
+            if(user.Deck == null){
                 throw new Exception();
             }
             //TODO Get Users cards out of database
-            for(int i = 0; i < player.Deck.Count; i++){
-                System.Console.WriteLine(player.Deck[i].Name);
+            for(int i = 0; i < user.Deck.Count; i++){
+                System.Console.WriteLine(user.Deck[i].Name);
             }
-            return player.Deck;
+            return user.Deck;
         }
 
-        public int updateDeck(){
+        public List<Card>? UpdateDeck(User user, string payload){
 
-            return 0;
+            return user.Deck;
         }
 
         private void EnsureTables()

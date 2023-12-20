@@ -1,9 +1,10 @@
-/*
 using CardClass;
+using Newtonsoft.Json;
 using PlayerClass;
 using SWE1.MessageServer.BLL;
 using SWE1.MessageServer.DAL;
 using SWE1.MessageServer.HttpServer.Response;
+using SWE1.MessageServer.HttpServer.Routing;
 using SWE1.MessageServer.Models;
 using System;
 using System.Collections.Generic;
@@ -11,44 +12,35 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWE1.MessageServer.API.Routing.Messages
+namespace SWE1.MessageServer.API.Routing.Messages{
 
-    internal class ShowCardsCommand : AuthenticatedRouteCommand
+    internal class ShowCardsCommand : IRouteCommand
     {
-        private readonly IMessageManager _messageManager;
-        private readonly int _messageId;
+        private readonly ICardManager _cardManager;
+        private readonly User _currentUser;
 
-        public ShowMessageCommand(IMessageManager messageManager, User identity, int messageId) : base(identity)
+        public ShowCardsCommand(ICardManager cardManager, User currentUser)
         {
-            _messageId = messageId;
-            _messageManager = messageManager;
+            _cardManager = cardManager;
+            _currentUser = currentUser;
         }
-        public override HttpResponse Execute()
+        public HttpResponse Execute()
         {
-            List<Card>? Stack;
-            try
-            {
-                Stack = DatabaseCardDao.showCards(player);
+            List<Card>? Stack = null;
+            try{
+                Stack = _cardManager.ShowCards(_currentUser);
             }
-            catch (MessageNotFoundException)
-            {
+            catch (UserNotFoundException){  
                 Stack = null;
             }
-            return Stack
-
             HttpResponse response;
-            if (message == null)
-            {
-                response = new HttpResponse(StatusCode.NotFound);
+            if(Stack == null){
+                response = new HttpResponse(StatusCode.BadRequest);
             }
-            else
-            {
-                response = new HttpResponse(StatusCode.Ok, message.Content);
+            else{
+                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(Stack).ToString());
             }
-
             return response;
         }
-
     }
 }
-*/

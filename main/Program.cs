@@ -25,11 +25,13 @@ namespace myMTCG{
             //var connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=mydb";
             IMessageDao messageDao = new InMemoryMessageDao();
             IUserDao userDao = new InMemoryUserDao();
+            ICardDao cardDao =  new InMemoryCardDao();
             //IUserDao userDao = new DatabaseUserDao(connectionString);
             //IMessageDao messageDao = new DatabaseMessageDao(connectionString);
 
             IMessageManager messageManager = new MessageManager(messageDao);
             IUserManager userManager = new UserManager(userDao);
+            ICardManager cardManager = new CardManager(cardDao);
 
             /*
             //Test: Register User
@@ -64,7 +66,7 @@ namespace myMTCG{
             messages.ForEach(m => Console.WriteLine($"Id: {m.Id}, Content: {m.Content}"));
             */
 
-            var router = new MessageRouter(userManager, messageManager);
+            var router = new MessageRouter(userManager, messageManager, cardManager);
             var server = new HttpServer(router, IPAddress.Any, 10001);
             server.Start();
 

@@ -21,18 +21,8 @@ namespace GameClass{
             }
             return _GameInstance;
         }
-        
-        private int _Rounds;
-        public int Rounds{
-            get{return _Rounds;}
-            set{_Rounds = value;}
-        }
-
-        private string _Winner = "TBD";
-        public string Winner{
-            get{return _Winner;}
-            set{_Winner = value;}
-        }
+        public int Rounds { get; set; }
+        public string Winner{ get; set; } = "TBD";
         public void StartGame(Player Player1, Player Player2){
             System.Console.WriteLine("==================Monster Trading Carde Game=================");
             System.Console.WriteLine("1.) Play");

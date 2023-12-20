@@ -11,8 +11,10 @@ namespace SWE1.MessageServer.DAL
 {
     internal interface ICardDao
     {
-        List<Card>? showCards(Player player);
-        List<Card>? showDeck(Player player);
-        int updateDeck();
+        public List<Card>? ShowCards(User user);
+        public List<Card>? ShowDeck(User user);
+        public List<Card>? CreatePackage(List<Card> Package);
+        bool AquirePackage(User user);
+        public List<Card>? UpdateDeck(User user, string payload);
     }
 }

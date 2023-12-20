@@ -1,4 +1,5 @@
-﻿using SWE1.MessageServer.BLL;
+﻿using Newtonsoft.Json;
+using SWE1.MessageServer.BLL;
 using SWE1.MessageServer.HttpServer.Response;
 using SWE1.MessageServer.HttpServer.Routing;
 using SWE1.MessageServer.Models;
@@ -28,7 +29,7 @@ namespace SWE1.MessageServer.API.Routing.Users
             try
             {
                 _userManager.RegisterUser(_credentials);
-                response = new HttpResponse(StatusCode.Created);
+                response = new HttpResponse(StatusCode.Created, JsonConvert.SerializeObject(_credentials.Username).ToString());
             }
             catch (DuplicateUserException)
             {

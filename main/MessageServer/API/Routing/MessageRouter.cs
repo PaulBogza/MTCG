@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
+using CardClass;
 using SWE1.MessageServer.API.Routing.Messages;
+using SWE1.MessageServer.API.Routing.Packages;
 using SWE1.MessageServer.API.Routing.Users;
 using SWE1.MessageServer.BLL;
 using SWE1.MessageServer.HttpServer;
@@ -22,13 +24,15 @@ namespace SWE1.MessageServer.API.Routing
     {
         private readonly IUserManager _userManager;
         private readonly IMessageManager _messageManager;
+        private readonly ICardManager _cardManager;
         private readonly IdentityProvider _identityProvider;
         private readonly IdRouteParser _routeParser;
 
-        public MessageRouter(IUserManager userManager, IMessageManager messageManager)
+        public MessageRouter(IUserManager userManager, IMessageManager messageManager, ICardManager cardManager)
         {
             _userManager = userManager;
             _messageManager = messageManager;
+            _cardManager = cardManager;
             _identityProvider = new IdentityProvider(userManager);
             _routeParser = new IdRouteParser();
         }
@@ -69,7 +73,7 @@ namespace SWE1.MessageServer.API.Routing
             }
 
             var checkBody = (string? payload) => payload ?? throw new InvalidDataException();
-   
+
             try
             {
                 return request switch
@@ -77,15 +81,15 @@ namespace SWE1.MessageServer.API.Routing
                     { Method: HttpMethod.Post, ResourcePath: "/users" } => new RegisterCommand(_userManager, Deserialize<Credentials>(request.Payload)),
                     { Method: HttpMethod.Post, ResourcePath: "/sessions" } => new LoginCommand(_userManager, Deserialize<Credentials>(request.Payload)),
 
-                    { Method: HttpMethod.Post, ResourcePath: "/messages" } => new AddMessageCommand(_messageManager, GetIdentity(request), checkBody(request.Payload)),
-                    { Method: HttpMethod.Get, ResourcePath: "/messages" } => new ListMessagesCommand(_messageManager, GetIdentity(request)),
-
-                    //{ Method: HttpMethod.Get, ResourcePath: var path } when isMatch(path, "messages") => new ShowMessageCommand(_messageManager, GetIdentity(request), parseId(path)),
-                    //{ Method: HttpMethod.Put, ResourcePath: var path } when isMatch(path, "messages") => new UpdateMessageCommand(_messageManager, GetIdentity(request), parseId(path), checkBody(request.Payload)),
-                    //{ Method: HttpMethod.Delete, ResourcePath: var path } when isMatch(path, "messages") => new RemoveMessageCommand(_messageManager, GetIdentity(request), parseId(path)),
-
                     { Method: HttpMethod.Get, ResourcePath: var path } when isMatch(path, "users") => new ShowUserCommand(_userManager, GetIdentity(request), parseParameters(path)),
                     { Method: HttpMethod.Put, ResourcePath: var path } when isMatch(path, "users") => new UpdateUserCommand(_userManager, GetIdentity(request), checkBody(request.Payload), parseParameters(path)),
+
+                    { Method: HttpMethod.Post, ResourcePath: "/packages" } => new CreatePackageCommand(_cardManager, GetIdentity(request), checkBody(request.Payload)),
+                    { Method: HttpMethod.Post, ResourcePath: "/transactions/packages" } => new AquirePackageCommand(_cardManager, GetIdentity(request)),
+
+                    { Method: HttpMethod.Get, ResourcePath: "/cards" } => new ShowCardsCommand(_cardManager, GetIdentity(request)),
+                    { Method: HttpMethod.Get, ResourcePath: "/deck" } => new ShowDeckCommand(_cardManager, GetIdentity(request)),
+                    //{ Method: HttpMethod.Put, ResourcePath: "/deck" } => new ConfigureDeckCommand(_cardManager, GetIdentity(request), checkBody(request.Payload)),
 
                     _ => null
                 };

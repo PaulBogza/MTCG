@@ -1,6 +1,10 @@
-/*
+using CardClass;
+using Newtonsoft.Json;
+using PlayerClass;
 using SWE1.MessageServer.BLL;
+using SWE1.MessageServer.DAL;
 using SWE1.MessageServer.HttpServer.Response;
+using SWE1.MessageServer.HttpServer.Routing;
 using SWE1.MessageServer.Models;
 using System;
 using System.Collections.Generic;
@@ -8,43 +12,35 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWE1.MessageServer.API.Routing.Messages
-{
-    internal class ShowDeckCommand : AuthenticatedRouteCommand
+namespace SWE1.MessageServer.API.Routing.Messages{
+
+    internal class ShowDeckCommand : IRouteCommand
     {
-        private readonly IMessageManager _messageManager;
-        private readonly int _messageId;
+        private readonly ICardManager _cardManager;
+        private readonly User _currentUser;
 
-        public ShowMessageCommand(IMessageManager messageManager, User identity, int messageId) : base(identity)
+        public ShowDeckCommand(ICardManager cardManager, User currentUser)
         {
-            _messageId = messageId;
-            _messageManager = messageManager;
+            _cardManager = cardManager;
+            _currentUser = currentUser;
         }
-        public override HttpResponse Execute()
+        public HttpResponse Execute()
         {
-            Message? message;
-            try
-            {
-                message = _messageManager.ShowMessage(Identity, _messageId);
+            List<Card>? Deck = null;
+            try{
+                Deck = _cardManager.ShowDeck(_currentUser);
             }
-            catch (MessageNotFoundException)
-            {
-                message = null;
+            catch (UserNotFoundException){  
+                Deck = null;
             }
-
             HttpResponse response;
-            if (message == null)
-            {
-                response = new HttpResponse(StatusCode.NotFound);
+            if(Deck == null){
+                response = new HttpResponse(StatusCode.BadRequest);
             }
-            else
-            {
-                response = new HttpResponse(StatusCode.Ok, message.Content);
+            else{
+                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(Deck).ToString());
             }
-
             return response;
         }
-
     }
 }
-*/

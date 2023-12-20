@@ -42,7 +42,7 @@ namespace SWE1.MessageServer.API.Routing.Users
             }
             else
             {   //ganzen user zurück geben, toString(user)
-                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(user.ToString()));
+                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(user.Username).ToString());
             }
 
             return response;

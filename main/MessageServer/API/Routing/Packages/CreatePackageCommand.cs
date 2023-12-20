@@ -1,0 +1,50 @@
+using CardClass;
+using Newtonsoft.Json;
+using SWE1.MessageServer.BLL;
+using SWE1.MessageServer.DAL;
+using SWE1.MessageServer.HttpServer.Response;
+using SWE1.MessageServer.HttpServer.Routing;
+using SWE1.MessageServer.Models;
+using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+namespace SWE1.MessageServer.API.Routing.Packages
+{
+    internal class CreatePackageCommand : IRouteCommand
+    {
+        private readonly string? _adminUserToken;
+        private readonly string _payload;
+        private readonly ICardManager _cardManager;
+
+        public CreatePackageCommand(ICardManager cardManager, User currentUser, string payload)
+        {
+            _cardManager = cardManager;
+            _adminUserToken = currentUser.Token;
+            _payload = payload;
+        }
+
+        public HttpResponse Execute(){
+            string adminToken = "admin-mtcgToken";
+            List<Card>? Package = JsonConvert.DeserializeObject<List<Card>>(_payload);
+            try{
+                Package = _cardManager.CreatePackage(Package);
+            }
+            catch(UserNotFoundException){
+                Package = null;
+            }
+            HttpResponse response;
+            if(Package != null && (adminToken == _adminUserToken)){
+                response = new HttpResponse(StatusCode.Created, JsonConvert.SerializeObject(Package));
+            }
+            else{
+                response = new HttpResponse(StatusCode.BadRequest);
+            }
+            return response;
+        }
+    }
+}
