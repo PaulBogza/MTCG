@@ -14,12 +14,21 @@ namespace SWE1.MessageServer.DAL
     internal class InMemoryCardDao : ICardDao
     {
         private readonly List<List<Card>> PackageCollection = new();
+        public List<Card> tmpStack = new();
+        public List<Card> tmpDeck = new();
 
         public List<Card>? CreatePackage(List<Card> Package){
             var Packages = new List<Card>();
             PackageCollection.Add(Package);
             
             return Package;
+        }
+        public void initDeck(User user){
+            if(user.Stack != null){
+                for(int i = 0; i < 4; i++){
+                    tmpDeck.Append(user.Stack.ElementAt(i));
+                }
+            }
         }
         public bool AquirePackage(User user){
             if(user.Coins > 4 && (PackageCollection.Count >= 1)){
@@ -36,16 +45,12 @@ namespace SWE1.MessageServer.DAL
             return user.Stack;
         }
         public List<Card>? ShowDeck(User user){
-            if(user.Deck != null){
-                System.Console.WriteLine(user.Deck.ElementAt(0).Id);
-            }
+            user.Deck = tmpDeck;
             return user.Deck;
         }
         public List<Card>? UpdateDeck(User user, string payload){
-            if(user.Stack == null){
-                return null;
-            }
-            System.Console.WriteLine(user.Stack.ElementAt(0).Id);
+            user.Deck = tmpDeck;
+            
             return user.Deck;
         }
     }

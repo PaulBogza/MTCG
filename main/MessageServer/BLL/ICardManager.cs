@@ -16,5 +16,6 @@ namespace SWE1.MessageServer.BLL
         List<Card>? CreatePackage(List<Card> Package);
         bool AquirePackage(User user);
         List<Card>? UpdateDeck(User user, string payload);
+        void initDeck(User user);
     }
 }
