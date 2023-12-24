@@ -27,6 +27,9 @@ namespace SWE1.MessageServer.DAL
             _connectionString = connectionString;
             EnsureTables();
         }
+        public void initDeck(User user){
+            
+        }
         public List<Card>? CreatePackage(List<Card> Package){
             Dictionary<int, List<Card>> GamePackage = new();
             return Package;
@@ -56,7 +59,7 @@ namespace SWE1.MessageServer.DAL
             return user.Deck;
         }
 
-        public List<Card>? UpdateDeck(User user, string payload){
+        public List<Card>? UpdateDeck(User user, List<string> payload){
 
             return user.Deck;
         }

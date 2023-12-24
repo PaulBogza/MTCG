@@ -16,11 +16,13 @@ namespace SWE1.MessageServer.API.Routing.Users
     {
         private readonly IUserManager _userManager;
         private readonly Credentials _credentials;
+        private readonly ICardManager _cardManager;
 
-        public LoginCommand(IUserManager userManager, Credentials credentials)
+        public LoginCommand(IUserManager userManager, Credentials credentials, ICardManager cardManager)
         {
             _credentials = credentials;
             _userManager = userManager;
+            _cardManager = cardManager;
         }
 
         public HttpResponse Execute()
@@ -28,7 +30,7 @@ namespace SWE1.MessageServer.API.Routing.Users
             User? user;
             try
             {
-                user = _userManager.LoginUser(_credentials);
+                user = _userManager.LoginUser(_credentials, _cardManager);
             }
             catch (UserNotFoundException)
             {
@@ -41,7 +43,8 @@ namespace SWE1.MessageServer.API.Routing.Users
                 response = new HttpResponse(StatusCode.Unauthorized);
             }
             else
-            {   //ganzen user zurück geben, toString(user)
+            {   
+                _cardManager.initDeck(user);
                 response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(user.Username).ToString());
             }
 

@@ -23,7 +23,7 @@ namespace SWE1.MessageServer.BLL
         public List<Card>? ShowDeck(User user){
             return _cardDao.ShowDeck(user) ?? throw new UserNotFoundException("No Deck found");
         }
-        public List<Card>? UpdateDeck(User user, string payload){
+        public List<Card>? UpdateDeck(User user, List<string> payload){
             return user.Deck;
         }
         public List<Card>? CreatePackage(List<Card> Package){
@@ -31,6 +31,10 @@ namespace SWE1.MessageServer.BLL
         }
         public bool AquirePackage(User user){
             return _cardDao.AquirePackage(user);
+        }
+
+        public void initDeck(User user){
+            _cardDao.initDeck(user);
         }
     }
 }

@@ -26,7 +26,6 @@ namespace SWE1.MessageServer.API.Routing.Messages{
         }
         public HttpResponse Execute()
         {   
-            _cardManager.initDeck(_currentUser);
             List<Card>? Deck = null;
             try{
                 Deck = _cardManager.ShowDeck(_currentUser);

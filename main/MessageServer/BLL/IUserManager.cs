@@ -9,7 +9,7 @@ namespace SWE1.MessageServer.BLL
 {
     internal interface IUserManager
     {
-        User LoginUser(Credentials credentials);
+        User LoginUser(Credentials credentials, ICardManager cardManager);
         void RegisterUser(Credentials credentials);
         User GetUserByAuthToken(string authToken);
         bool UpdateUser(User user, Dictionary<string, string> ?UserInfo);

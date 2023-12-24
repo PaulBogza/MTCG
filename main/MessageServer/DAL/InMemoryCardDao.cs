@@ -8,32 +8,36 @@ using CardClass;
 using SWE1.MessageServer.API.Routing.Users;
 using System.Runtime.ConstrainedExecution;
 using System.Reflection.Metadata.Ecma335;
+using System.ComponentModel;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace SWE1.MessageServer.DAL
 {
     internal class InMemoryCardDao : ICardDao
     {
         private readonly List<List<Card>> PackageCollection = new();
-        public List<Card> tmpStack = new();
-        public List<Card> tmpDeck = new();
+        public List<Card>? tmpDeck = new();
+        public List<Card>? tmpStack = new();
 
         public List<Card>? CreatePackage(List<Card> Package){
-            var Packages = new List<Card>();
             PackageCollection.Add(Package);
-            
             return Package;
         }
         public void initDeck(User user){
-            if(user.Stack != null){
+            if(user.Stack != null && user.Stack.Any()){
                 for(int i = 0; i < 4; i++){
-                    tmpDeck.Append(user.Stack.ElementAt(i));
+                    tmpDeck?.Add(user.Stack.ElementAt(i));
                 }
+                user.Deck = tmpDeck;
+                tmpDeck = null;
             }
         }
         public bool AquirePackage(User user){
             if(user.Coins > 4 && (PackageCollection.Count >= 1)){
                 user.Coins += -5;
-                user.Stack = PackageCollection.ElementAt(0);
+                tmpStack = PackageCollection.ElementAt(0);
+                user.Stack = tmpStack;
+                tmpStack = null;
                 PackageCollection.RemoveAt(0);
                 return true;
             }
@@ -45,13 +49,28 @@ namespace SWE1.MessageServer.DAL
             return user.Stack;
         }
         public List<Card>? ShowDeck(User user){
-            user.Deck = tmpDeck;
+            if(user.Deck == null){
+                initDeck(user);
+            }
             return user.Deck;
         }
-        public List<Card>? UpdateDeck(User user, string payload){
-            user.Deck = tmpDeck;
-            
-            return user.Deck;
+        public List<Card>? UpdateDeck(User user, List<string> payload){
+            if(payload.Count == 4 && user.Stack != null){
+                for(int i = 0; i < 4; i++){
+                    user.Deck?.RemoveAt(i);
+                }
+                for(int i = 0; i < user.Stack?.Count; i++){
+                    for(int j = 0; j < payload.Count; j++){
+                        if(payload.ElementAt(j) == user.Stack.ElementAt(i).Id){
+                            user.Deck?.Add(user.Stack.ElementAt(i));
+                        }
+                    }
+                }
+                return user.Deck;
+            }
+            else{
+                return null;
+            }
         }
     }
 }

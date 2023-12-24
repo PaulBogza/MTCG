@@ -25,7 +25,7 @@ namespace SWE1.MessageServer.BLL
             return _userDao.GetUserByAuthToken(authToken) ?? throw new UserNotFoundException();
         }
 
-        public User LoginUser(Credentials credentials)
+        public User LoginUser(Credentials credentials, ICardManager cardManager)
         {
             return _userDao.GetUserByCredentials(credentials.Username, credentials.Password) ?? throw new UserNotFoundException();
         }

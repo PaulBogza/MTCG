@@ -79,17 +79,17 @@ namespace SWE1.MessageServer.API.Routing
                 return request switch
                 {
                     { Method: HttpMethod.Post, ResourcePath: "/users" } => new RegisterCommand(_userManager, Deserialize<Credentials>(request.Payload)),
-                    { Method: HttpMethod.Post, ResourcePath: "/sessions" } => new LoginCommand(_userManager, Deserialize<Credentials>(request.Payload)),
+                    { Method: HttpMethod.Post, ResourcePath: "/sessions" } => new LoginCommand(_userManager, Deserialize<Credentials>(request.Payload), _cardManager),
 
                     { Method: HttpMethod.Get, ResourcePath: var path } when isMatch(path, "users") => new ShowUserCommand(_userManager, GetIdentity(request), parseParameters(path)),
                     { Method: HttpMethod.Put, ResourcePath: var path } when isMatch(path, "users") => new UpdateUserCommand(_userManager, GetIdentity(request), checkBody(request.Payload), parseParameters(path)),
 
-                    { Method: HttpMethod.Post, ResourcePath: "/packages" } => new CreatePackageCommand(_cardManager, GetIdentity(request), checkBody(request.Payload)),
+                    { Method: HttpMethod.Post, ResourcePath: "/packages" } => new CreatePackageCommand(_cardManager, GetIdentity(request), Deserialize<List<Card>>(request.Payload)),
                     { Method: HttpMethod.Post, ResourcePath: "/transactions/packages" } => new AquirePackageCommand(_cardManager, GetIdentity(request)),
 
                     { Method: HttpMethod.Get, ResourcePath: "/cards" } => new ShowCardsCommand(_cardManager, GetIdentity(request)),
                     { Method: HttpMethod.Get, ResourcePath: "/deck" } => new ShowDeckCommand(_cardManager, GetIdentity(request)),
-                    { Method: HttpMethod.Put, ResourcePath: "/deck" } => new ConfigureDeckCommand(_cardManager, GetIdentity(request), checkBody(request.Payload)),
+                    { Method: HttpMethod.Put, ResourcePath: "/deck" } => new ConfigureDeckCommand(_cardManager, GetIdentity(request), Deserialize<List<string>>(request.Payload)),
 
                     _ => null
                 };

@@ -33,39 +33,6 @@ namespace myMTCG{
             IUserManager userManager = new UserManager(userDao);
             ICardManager cardManager = new CardManager(cardDao);
 
-            /*
-            //Test: Register User
-            var credentials = new Credentials("user1", "pass");
-            userManager.RegisterUser(credentials);
-            var registeredUser = userDao.GetUserByCredentials(credentials.Username, credentials.Password);
-            Console.WriteLine($"Username: {registeredUser?.Username}, Password: {registeredUser?.Password}");
-
-            // Test: Login User
-            var user = userManager.LoginUser(credentials);
-            Console.WriteLine($"Username: {user.Username}, Token: {user.Token}");
-
-            // Test: Add Messages
-            var contents = Enumerable.Range(1, 10).Select(i => $"message {i}").ToList();
-            contents.ForEach(m => messageManager.AddMessage(user, m));
-            messageDao.GetMessages(user.Username).ToList().ForEach(m => Console.WriteLine($"Id: {m.Id}, Content: {m.Content}"));
-
-            // Test: List Messages
-            var messages = messageManager.ListMessages(user).ToList();
-            messages.ForEach(m => Console.WriteLine($"Id: {m.Id}, Content: {m.Content}"));
-
-            // Test: Update Message
-            messageManager.UpdateMessage(user, 2, "new message 2");
-
-            // Test: Show Message
-            var message = messageManager.ShowMessage(user, 2);
-            Console.WriteLine($"Id: {message.Id}, Content: {message.Content}");
-
-            // Test: Delete Message & List Message
-            messageManager.RemoveMessage(user, 2);
-            messages = messageManager.ListMessages(user).ToList();
-            messages.ForEach(m => Console.WriteLine($"Id: {m.Id}, Content: {m.Content}"));
-            */
-
             var router = new MessageRouter(userManager, messageManager, cardManager);
             var server = new HttpServer(router, IPAddress.Any, 10001);
             server.Start();
