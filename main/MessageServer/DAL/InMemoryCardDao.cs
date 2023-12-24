@@ -55,21 +55,30 @@ namespace SWE1.MessageServer.DAL
             return user.Deck;
         }
         public List<Card>? UpdateDeck(User user, List<string> payload){
+            Card forbiddenCard = new Card() {Id = "666"};
+            List<Card>? forbiddenList = null;
+            tmpDeck = null;
             if(payload.Count == 4 && user.Stack != null){
-                for(int i = 0; i < 4; i++){
-                    user.Deck?.RemoveAt(i);
-                }
                 for(int i = 0; i < user.Stack?.Count; i++){
                     for(int j = 0; j < payload.Count; j++){
                         if(payload.ElementAt(j) == user.Stack.ElementAt(i).Id){
-                            user.Deck?.Add(user.Stack.ElementAt(i));
+                            tmpDeck?.Add(user.Stack.ElementAt(i));
                         }
                     }
                 }
+            }
+            if(tmpDeck?.Count == 4){
+                foreach(var card in tmpDeck){
+                    user.Deck?.Add(card);
+                }
                 return user.Deck;
             }
-            else{
-                return null;
+            else if(tmpDeck?.Count != 4){
+                forbiddenList?.Add(forbiddenCard);
+                return forbiddenList;
+            }
+            else{ //unchanged version of user deck
+                return user.Deck;
             }
         }
     }

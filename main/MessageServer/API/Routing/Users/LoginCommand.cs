@@ -40,7 +40,7 @@ namespace SWE1.MessageServer.API.Routing.Users
             HttpResponse response;
             if (user == null)
             {
-                response = new HttpResponse(StatusCode.Unauthorized);
+                response = new HttpResponse(StatusCode.NotFound);
             }
             else
             {   

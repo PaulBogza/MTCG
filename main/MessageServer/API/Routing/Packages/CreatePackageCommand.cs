@@ -42,6 +42,12 @@ namespace SWE1.MessageServer.API.Routing.Packages
             if(Package != null && (adminToken == _adminUserToken)){
                 response = new HttpResponse(StatusCode.Created, JsonConvert.SerializeObject(Package));
             }
+            else if(Package != null && adminToken == null){
+                response = new HttpResponse(StatusCode.Unauthorized);
+            }
+            else if(Package != null && adminToken != _adminUserToken){
+                response = new HttpResponse(StatusCode.Forbidden);
+            }
             else{
                 response = new HttpResponse(StatusCode.BadRequest);
             }

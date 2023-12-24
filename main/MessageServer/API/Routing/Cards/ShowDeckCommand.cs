@@ -19,13 +19,14 @@ namespace SWE1.MessageServer.API.Routing.Messages{
         private readonly ICardManager _cardManager;
         private readonly User _currentUser;
 
-        public ShowDeckCommand(ICardManager cardManager, User currentUser)
+        public ShowDeckCommand(ICardManager cardManager, User currentUser) //add authtoken
         {
             _cardManager = cardManager;
             _currentUser = currentUser;
         }
         public HttpResponse Execute()
         {   
+            string token = $"{_currentUser.Username}-mtcgToken";
             List<Card>? Deck = null;
             try{
                 Deck = _cardManager.ShowDeck(_currentUser);
@@ -35,7 +36,10 @@ namespace SWE1.MessageServer.API.Routing.Messages{
             }
             HttpResponse response;
             if(Deck == null){
-                response = new HttpResponse(StatusCode.BadRequest);
+                response = new HttpResponse(StatusCode.NoContent);
+            }
+            else if(_currentUser.Token != token){
+                response = new HttpResponse(StatusCode.Unauthorized);
             }
             else{
                 response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(Deck).ToString());

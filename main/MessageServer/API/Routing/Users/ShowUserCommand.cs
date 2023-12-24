@@ -48,6 +48,9 @@ namespace SWE1.MessageServer.API.Routing.Users
                 _userManager.UpdateUser(_currentUser, _currentUser.UserInfo);
                 response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(user).ToString());
             }
+            else if(user == null){
+                response = new HttpResponse(StatusCode.NotFound);
+            }
             else
             {
                 response = new HttpResponse(StatusCode.Unauthorized);
