@@ -91,6 +91,10 @@ namespace SWE1.MessageServer.API.Routing
                     { Method: HttpMethod.Get, ResourcePath: "/deck" } => new ShowDeckCommand(_cardManager, GetIdentity(request)),
                     { Method: HttpMethod.Put, ResourcePath: "/deck" } => new ConfigureDeckCommand(_cardManager, GetIdentity(request), Deserialize<List<string>>(request.Payload)),
 
+                    { Method: HttpMethod.Get, ResourcePath: "/stats" } => new ShowStatsCommand(_userManager, GetIdentity(request)),
+                    //{ Method: HttpMethod.Get, ResourcePath: "/scoreboard" } => new ShowScoreboardCommand(_userManager, GetIdentity(request)),
+                    //{ Method: HttpMethod.Get, ResourcePath: "/deck" } => new ShowDeckCommand(_cardManager, GetIdentity(request)),
+                    
                     _ => null
                 };
             }

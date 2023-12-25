@@ -19,7 +19,7 @@ namespace SWE1.MessageServer.API.Routing.Messages{
         private readonly ICardManager _cardManager;
         private readonly User _currentUser;
 
-        public ShowDeckCommand(ICardManager cardManager, User currentUser) //add authtoken
+        public ShowDeckCommand(ICardManager cardManager, User currentUser)
         {
             _cardManager = cardManager;
             _currentUser = currentUser;

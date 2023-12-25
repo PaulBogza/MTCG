@@ -13,5 +13,6 @@ namespace SWE1.MessageServer.DAL
         User? GetUserByCredentials(string username, string password);
         bool InsertUser(User user);
         bool UpdateUser(User user, Dictionary<string, string> ?UserInfo);
+        User ShowStats(User user);
     }
 }

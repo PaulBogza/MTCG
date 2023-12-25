@@ -38,5 +38,8 @@ namespace SWE1.MessageServer.BLL
                 throw new DuplicateUserException();
             }
         }
+        public User ShowStats(User user){
+            return _userDao.ShowStats(user);
+        }
     }
 }

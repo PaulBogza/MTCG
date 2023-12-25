@@ -42,5 +42,8 @@ namespace SWE1.MessageServer.DAL
         {
             return _users.SingleOrDefault(u => u.Username == username);
         }
+        public User ShowStats(User user){
+            return user;
+        }
     }
 }

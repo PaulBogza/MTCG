@@ -59,7 +59,9 @@ namespace SWE1.MessageServer.DAL
                 throw new UserNotFoundException();
             }
         }
-       
+        public User ShowStats(User user){
+            return user;
+        }
         public bool InsertUser(User user)
         {
             using var connection = new NpgsqlConnection(_connectionString);
