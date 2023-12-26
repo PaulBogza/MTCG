@@ -62,6 +62,11 @@ namespace SWE1.MessageServer.DAL
         public User ShowStats(User user){
             return user;
         }
+        public List<UserStats> ShowScoreboard(){
+            //select * from users order by elo descending
+            List<UserStats> Scoreboard = new();
+            return Scoreboard;
+        }
         public bool InsertUser(User user)
         {
             using var connection = new NpgsqlConnection(_connectionString);

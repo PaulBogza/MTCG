@@ -45,5 +45,16 @@ namespace SWE1.MessageServer.DAL
         public User ShowStats(User user){
             return user;
         }
+        public List<UserStats> ShowScoreboard(){
+            List<UserStats> Scoreboard = new();
+            UserStats? stats;
+
+            foreach(var elem in _users){
+                stats = new(elem.Username, elem.Elo, elem.Wins, elem.Losses);
+                Scoreboard.Add(stats);
+            }
+
+            return Scoreboard;
+        }
     }
 }

@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 
 namespace SWE1.MessageServer.API.Routing.Users
 {
-    internal class ShowStatsCommand : IRouteCommand
+    internal class ShowScoreboardCommand : IRouteCommand
     {
         private readonly IUserManager _userManager;
         private readonly User _currentUser;
   
-        public ShowStatsCommand(IUserManager userManager, User currentUser)
+        public ShowScoreboardCommand(IUserManager userManager, User currentUser)
         {
             _userManager = userManager;
             _currentUser = currentUser;
@@ -29,29 +29,27 @@ namespace SWE1.MessageServer.API.Routing.Users
         {
             string token = $"{_currentUser.Username}-mtcgToken";
             //string adminToken = "admin-mtcgToken";
-            User? user;
-            UserStats? stats;
+            List<UserStats> ?Scoreboard;
             try
             {
-                user = _userManager.ShowStats(_currentUser);
+                Scoreboard = _userManager.ShowScoreboard();
             }
-            catch (UserNotFoundException)
+            catch 
             {
-                user = null;
+                Scoreboard = null;
             }
 
             HttpResponse response;
-            if (user == null)
+            if (Scoreboard == null)
             {
-                response = new HttpResponse(StatusCode.NotFound);
+                response = new HttpResponse(StatusCode.BadRequest);
             }
             else if(_currentUser.Token != token){
                 response = new HttpResponse(StatusCode.Unauthorized);
             }
             else
             {   
-                stats = new(user.Username, user.Elo, user.Wins, user.Losses);
-                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(stats).ToString());
+                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(Scoreboard).ToString());
             }
 
             return response;

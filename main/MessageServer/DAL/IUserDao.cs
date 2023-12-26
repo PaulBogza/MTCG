@@ -14,5 +14,6 @@ namespace SWE1.MessageServer.DAL
         bool InsertUser(User user);
         bool UpdateUser(User user, Dictionary<string, string> ?UserInfo);
         User ShowStats(User user);
+        List<UserStats> ShowScoreboard();
     }
 }

@@ -41,5 +41,8 @@ namespace SWE1.MessageServer.BLL
         public User ShowStats(User user){
             return _userDao.ShowStats(user);
         }
+        public List<UserStats> ShowScoreboard(){
+            return _userDao.ShowScoreboard();
+        }
     }
 }
