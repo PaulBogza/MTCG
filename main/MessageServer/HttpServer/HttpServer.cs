@@ -1,4 +1,6 @@
-﻿using SWE1.MessageServer.HttpServer.Response;
+﻿using Microsoft.VisualBasic;
+using Newtonsoft.Json.Bson;
+using SWE1.MessageServer.HttpServer.Response;
 using SWE1.MessageServer.HttpServer.Routing;
 using SWE1.MessageServer.Models;
 using System;
@@ -6,8 +8,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection.Metadata;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace SWE1.MessageServer.HttpServer
 {
@@ -33,7 +37,8 @@ namespace SWE1.MessageServer.HttpServer
             {
                 var client = _listener.AcceptTcpClient();
                 var clientHandler = new HttpClientHandler(client);
-                HandleClient(clientHandler);
+                var thread = new Thread(() => HandleClient(clientHandler));
+                thread.Start();
             }
         }
 
@@ -73,7 +78,6 @@ namespace SWE1.MessageServer.HttpServer
             }
 
             handler.SendResponse(response);
-
         }
     }
 }

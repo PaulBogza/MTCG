@@ -45,6 +45,10 @@
             "npgsql": {
               "target": "Package",
               "version": "[7.0.6, )"
+            },
+            "nunit": {
+              "target": "Package",
+              "version": "[4.0.1, )"
             }
           },
           "imports": [
