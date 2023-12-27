@@ -1,15 +1,14 @@
-using GameClass;
 using CardClass;
-using ElementTypeEnum;
-using MonsterCardClass;
-using SpellCardClass;
 using PlayerClass;
+using SpellCardClass;
+using MonsterCardClass;
+using ElementTypeEnum;
+using GameClass;
 
 namespace BattleClass{
     public class Battle{
 
-        public Card? losingCard = null;
-
+        public Card? losingCard;
 
         public void InitBattle(){
             //singleton implementation
@@ -20,17 +19,21 @@ namespace BattleClass{
 
             newGame.StartGame(Player1, Player2);
 
+            /*
             MonsterCard Goblin = new MonsterCard(1, "WaterGoblin", 1, ElementType.Water, "Goblin");
             MonsterCard Elf = new MonsterCard(1, "FireElf", 1, ElementType.Fire, "Elf");
             SpellCard FrostRay = new SpellCard(1, "FrostRay", 1, ElementType.Water, "Spell");
-            MonsterCard Dragon = new MonsterCard(1, "Fortisax", 1, ElementType.Fire, "Dragon");
+            MonsterCard Dragon = new MonsterCard(1, "Fortisax", 10, ElementType.Fire, "Dragon");
             MonsterCard Knight = new MonsterCard(1, "Black Knight", 1, ElementType.Normal, "Knight");
             MonsterCard Ork = new MonsterCard(1, "Ork", 1, ElementType.Normal, "Ork");
             MonsterCard Kraken = new MonsterCard(1, "Takoyaki", 1, ElementType.Water, "Kraken");
             MonsterCard Wizard = new MonsterCard(1, "Saruman", 1, ElementType.Normal, "Wizard");
-            MonsterCard FireElf = new MonsterCard(1, "FireElf", 1 ,ElementType.Fire, "FireElf");
+            MonsterCard FireElf = new MonsterCard(1, "FireElf", 5 ,ElementType.Fire, "FireElf");
 
-            newBattle.losingCard = newBattle.Fight(Dragon, FireElf);
+            newBattle.losingCard = newBattle.Fight(Goblin, FireElf);
+            */
+
+           //newBattle.losingCard = newBattle.Fight(Dragon, FireElf);
 
             if(newBattle.losingCard == null){
                 System.Console.WriteLine("Draw");
@@ -40,8 +43,8 @@ namespace BattleClass{
             }
         }
         public Card? Fight(Card Card1, Card Card2){
-            float tempDmg1 = Card1.Damage;
-            float tempDmg2 = Card2.Damage;
+            double tempDmg1 = Card1.Damage;
+            double tempDmg2 = Card2.Damage;
 
             if(Card1.Type == "Dragon" || Card1.Type == "Knight" || Card1.Type == "Ork" || Card1.Type == "Wizard" || Card1.Type == "Kraken" || Card1.Type == "FireElf"){
                 tempDmg2 = checkSpecialInteraction(Card2, Card1);
@@ -69,7 +72,7 @@ namespace BattleClass{
                 return Card1;
             }
         }
-        public float checkEffect(Card Card1, Card Card2){
+        public double checkEffect(Card Card1, Card Card2){
             if(Card1.Element == ElementType.Water && Card2.Element == ElementType.Fire){
                 return Card1.Damage*2;
             }
@@ -87,7 +90,7 @@ namespace BattleClass{
             }
         }
 
-        public float checkSpecialInteraction(Card Card1, Card Card2){
+        public double checkSpecialInteraction(Card Card1, Card Card2){
             if(Card1.Type == "Goblin" && Card2.Type == "Dragon"){
                 return Card1.Damage*0;
             }

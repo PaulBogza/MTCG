@@ -4,12 +4,12 @@ using ElementTypeEnum;
 
 namespace MonsterCardClass{
     public class MonsterCard : Card{
-        private readonly int _Id;
-        private readonly string _Name;
-        private readonly float _Damage;
-        private readonly ElementType _Element;
-        private readonly string _Type;
-        public MonsterCard(int Id, string Name, float Damage, ElementType Element, string Type){
+        public int _Id { get; set; }
+        public string _Name { get; set; }
+        public double _Damage { get; set; }
+        public ElementType _Element { get; set; }
+        public string _Type { get; set; }
+        public MonsterCard(int Id, string Name, double Damage, ElementType Element, string Type){
             _Id = Id;
             _Name = Name;
             _Damage = Damage;
