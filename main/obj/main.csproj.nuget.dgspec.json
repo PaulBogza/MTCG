@@ -48,7 +48,7 @@
             },
             "nunit": {
               "target": "Package",
-              "version": "[4.0.1, )"
+              "version": "[3.13.3, )"
             }
           },
           "imports": [

@@ -13,6 +13,6 @@
     <SourceRoot Include="/home/nero/.nuget/packages/" />
   </ItemGroup>
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <Import Project="$(NuGetPackageRoot)nunit/4.0.1/build/NUnit.props" Condition="Exists('$(NuGetPackageRoot)nunit/4.0.1/build/NUnit.props')" />
+    <Import Project="$(NuGetPackageRoot)nunit/3.13.3/build/NUnit.props" Condition="Exists('$(NuGetPackageRoot)nunit/3.13.3/build/NUnit.props')" />
   </ImportGroup>
 </Project>
