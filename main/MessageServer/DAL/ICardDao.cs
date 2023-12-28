@@ -1,5 +1,3 @@
-using CardClass;
-using PlayerClass;
 using SWE1.MessageServer.Models;
 using System;
 using System.Collections.Generic;
@@ -11,11 +9,11 @@ namespace SWE1.MessageServer.DAL
 {
     internal interface ICardDao
     {
-        public List<Card>? ShowCards(User user);
-        public List<Card>? ShowDeck(User user);
-        public List<Card>? CreatePackage(List<Card> Package);
+        List<Card>? ShowCards(User user);
+        List<Card>? ShowDeck(User user);
+        List<Card>? CreatePackage(List<Card> Package);
         bool AquirePackage(User user);
-        public List<Card>? UpdateDeck(User user, List<string> payload);
+        List<Card>? UpdateDeck(User user, List<string> payload);
         void initDeck(User user);
     }
 }

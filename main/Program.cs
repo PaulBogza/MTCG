@@ -1,11 +1,4 @@
 ﻿using System;
-using CardClass;
-using MonsterCardClass;
-using SpellCardClass;
-using PlayerClass;
-using GameClass;
-using ElementTypeEnum;
-using BattleClass;
 using Npgsql;
 using System.Runtime.ConstrainedExecution;
 using SWE1.MessageServer.API.Routing;
@@ -22,20 +15,27 @@ namespace myMTCG{
             // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/member-access-operators#null-conditional-operators--and-
 
             //var connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=mydb";
+            IGameDao gameDao = new InMemoryGameDao();
             IMessageDao messageDao = new InMemoryMessageDao();
             IUserDao userDao = new InMemoryUserDao();
             ICardDao cardDao =  new InMemoryCardDao();
             //IUserDao userDao = new DatabaseUserDao(connectionString);
             //IMessageDao messageDao = new DatabaseMessageDao(connectionString);
 
+            IGameManager gameManager = new GameManager(gameDao);
             IMessageManager messageManager = new MessageManager(messageDao);
             IUserManager userManager = new UserManager(userDao);
             ICardManager cardManager = new CardManager(cardDao);
 
+            MonsterCard Dragon = new MonsterCard("1", "Fortisax", 10.0, ElementType.Fire, "Dragon");
+            MonsterCard FireElf = new MonsterCard("1", "FireElf", 5.0 ,ElementType.Fire, "FireElf");
+            var losingCard = gameManager.Fight(Dragon, FireElf);
+            
+            
+
             var router = new MessageRouter(userManager, messageManager, cardManager);
             var server = new HttpServer(router, IPAddress.Any, 10001);
             server.Start();
-
         }
     }
 }

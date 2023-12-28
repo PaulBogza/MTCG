@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("UnitTests")]
 
-namespace SWE1.MessageServer.BLL
+namespace SWE1.MessageServer.DAL
 {
-    internal interface IGameManager
+    internal interface IGameDao
     {
         User? StartGame(User player1, User player2);
         void Trade(User player1, User player2);

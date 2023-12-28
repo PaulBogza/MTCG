@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CardClass;
 using SWE1.MessageServer.API.Routing.Users;
 using System.Runtime.ConstrainedExecution;
 using System.Reflection.Metadata.Ecma335;

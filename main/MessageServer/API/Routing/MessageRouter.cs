@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using CardClass;
 using SWE1.MessageServer.API.Routing.Messages;
 using SWE1.MessageServer.API.Routing.Packages;
 using SWE1.MessageServer.API.Routing.Users;

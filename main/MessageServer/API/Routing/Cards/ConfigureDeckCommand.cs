@@ -1,7 +1,5 @@
-using CardClass;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
-using PlayerClass;
 using SWE1.MessageServer.BLL;
 using SWE1.MessageServer.DAL;
 using SWE1.MessageServer.HttpServer.Response;

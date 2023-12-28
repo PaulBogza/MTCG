@@ -1,8 +1,6 @@
-using System;
-using ElementTypeEnum;
-using BattleClass;
 
-namespace CardClass{
+
+namespace SWE1.MessageServer.Models{
     public class Card{
         public string? Id { get; set; }
         public string? Name { get; set; }

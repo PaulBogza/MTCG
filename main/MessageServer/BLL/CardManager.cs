@@ -1,5 +1,3 @@
-using CardClass;
-using PlayerClass;
 using SWE1.MessageServer.Models;
 using System;
 using System.Collections.Generic;

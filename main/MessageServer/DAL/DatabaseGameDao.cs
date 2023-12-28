@@ -1,47 +1,65 @@
-using CardClass;
-using PlayerClass;
-using SpellCardClass;
-using MonsterCardClass;
-using ElementTypeEnum;
-using GameClass;
+using Npgsql;
+using SWE1.MessageServer.BLL;
+using SWE1.MessageServer.Models;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Runtime.ConstrainedExecution;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
+[assembly: InternalsVisibleTo("UnitTests")]
 
-namespace BattleClass{
-    public class Battle{
+namespace SWE1.MessageServer.DAL
+{
+    internal class DatabaseGameDao : IGameDao
+    {
+        public int Rounds { get; set; } = 1;
+        public string? Winner { get; set; }
+        private const string CreateUserTableCommand = @"CREATE TABLE IF NOT EXISTS cards (card_id varchar PRIMARY KEY, name varchar, damage varchar);";
+        private const string SelectAllUsersCommand = @"SELECT username, password FROM users";
+        private const string SelectUserByCredentialsCommand = "SELECT username, password FROM users WHERE username=@username AND password=@password";
+        private const string InsertUserCommand = @"INSERT INTO users(username, password) VALUES (@username, @password)";
 
-        public Card? losingCard;
+        private readonly string _connectionString;
 
-        public void InitBattle(){
-            //singleton implementation
-            Game newGame = Game.GetInstance();
-            Battle newBattle = new Battle();
-            Player Player1 = new Player(100, 20);
-            Player Player2 = new Player(100, 20);
+        public DatabaseGameDao(string connectionString)
+        {
+            _connectionString = connectionString;
+            EnsureTables();
+        }
 
-            newGame.StartGame(Player1, Player2);
+        public User? StartGame(User Player1, User Player2){
+            Card losingCard = new();
+            int i = 0;
+            while(Player1.Deck != null || Player2.Deck != null || Rounds < 20){
+                losingCard = Fight(Player1.Deck.ElementAt(i), Player2.Deck.ElementAt(i));
+                i++;
+                Rounds++;
+            }
 
-            /*
-            MonsterCard Goblin = new MonsterCard(1, "WaterGoblin", 1, ElementType.Water, "Goblin");
-            MonsterCard Elf = new MonsterCard(1, "FireElf", 1, ElementType.Fire, "Elf");
-            SpellCard FrostRay = new SpellCard(1, "FrostRay", 1, ElementType.Water, "Spell");
-            MonsterCard Dragon = new MonsterCard(1, "Fortisax", 10, ElementType.Fire, "Dragon");
-            MonsterCard Knight = new MonsterCard(1, "Black Knight", 1, ElementType.Normal, "Knight");
-            MonsterCard Ork = new MonsterCard(1, "Ork", 1, ElementType.Normal, "Ork");
-            MonsterCard Kraken = new MonsterCard(1, "Takoyaki", 1, ElementType.Water, "Kraken");
-            MonsterCard Wizard = new MonsterCard(1, "Saruman", 1, ElementType.Normal, "Wizard");
-            MonsterCard FireElf = new MonsterCard(1, "FireElf", 5 ,ElementType.Fire, "FireElf");
-
-            newBattle.losingCard = newBattle.Fight(Goblin, FireElf);
-            */
-
-           //newBattle.losingCard = newBattle.Fight(Dragon, FireElf);
-
-            if(newBattle.losingCard == null){
-                System.Console.WriteLine("Draw");
+            if(Player1.Deck == null){
+                Winner = Player2.Username;
+                Player1.Elo += -5;
+                Player2.Elo += 3;
+            }
+            else if(Player2.Deck == null){
+                Winner = Player1.Username;                
+                Player2.Elo += -5;
+                Player1.Elo += 3;
             }
             else{
-                System.Console.WriteLine("{0} lost this battle",newBattle.losingCard.Name);
+                Winner = "Draw";
             }
+            System.Console.WriteLine(Player1.Elo);
+            System.Console.WriteLine(Player2.Elo);
+            return Player1;
         }
+
+        public void Trade(User player1, User player2){}
+
         public Card? Fight(Card Card1, Card Card2){
             double tempDmg1 = Card1.Damage;
             double tempDmg2 = Card2.Damage;
@@ -109,6 +127,13 @@ namespace BattleClass{
             else{
                 return Card1.Damage;
             }
+        }
+        private void EnsureTables()
+        {
+            using var connection = new NpgsqlConnection(_connectionString);
+            connection.Open();
+            using var cmd = new NpgsqlCommand(CreateUserTableCommand, connection);
+            cmd.ExecuteNonQuery();
         }
     }
 }

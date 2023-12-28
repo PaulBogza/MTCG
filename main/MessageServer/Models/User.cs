@@ -1,5 +1,4 @@
 ﻿using System.Reflection.Metadata.Ecma335;
-using CardClass;
 using Microsoft.VisualBasic;
 
 namespace SWE1.MessageServer.Models
