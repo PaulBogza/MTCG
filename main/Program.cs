@@ -27,13 +27,7 @@ namespace myMTCG{
             IUserManager userManager = new UserManager(userDao);
             ICardManager cardManager = new CardManager(cardDao);
 
-            MonsterCard Dragon = new MonsterCard("1", "Fortisax", 10.0, ElementType.Fire, "Dragon");
-            MonsterCard FireElf = new MonsterCard("1", "FireElf", 5.0 ,ElementType.Fire, "FireElf");
-            var losingCard = gameManager.Fight(Dragon, FireElf);
-            
-            
-
-            var router = new MessageRouter(userManager, messageManager, cardManager);
+            var router = new MessageRouter(userManager, messageManager, cardManager, gameManager);
             var server = new HttpServer(router, IPAddress.Any, 10001);
             server.Start();
         }

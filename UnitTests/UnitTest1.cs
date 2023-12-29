@@ -7,13 +7,7 @@ using SWE1.MessageServer.HttpServer;
 
 namespace UnitTests{
     public class Tests
-    {
-        [Test]
-        public void Test1()
-        {
-            Assert.Pass();
-        }
-        
+    {        
         [Test]
         public void FireElf_Dragon_SpecialInteraction_Test(){
             Card? losingCard;
@@ -178,25 +172,85 @@ namespace UnitTests{
         }
 
         [Test]
-        public void Check_Elo_Calculation_Test(){
+        public void Elo_Calculation_Test(){
             IGameDao gameDao = new InMemoryGameDao();
             IGameManager gameManager = new GameManager(gameDao);
 
-            User? Loser = new("name", "123");
-
-            MonsterCard Dragon = new MonsterCard("1", "Fortisax", 10.0, ElementType.Fire, "Dragon");
-            MonsterCard FireElf = new MonsterCard("1", "FireElf", 5.0 ,ElementType.Fire, "FireElf");
-
-
-            User player1 = new User("name", "123");
-            User player2 = new User("name2", "123");
-
-            player1.Deck?.Add(Dragon);
-            player2.Deck?.Add(FireElf);
+            User player1 = new User("player1", "password");
+            User player2 = new User("player2", "passworrd");
+            User Loser = new User("", "");
+            MonsterCard Dragon = new MonsterCard("1", "Dragon", 10.0 , ElementType.Fire, "Dragon");
+            MonsterCard FireElf = new MonsterCard("2", "FireElf", 5.0 ,ElementType.Fire, "FireElf");
+            player1.Deck.Add(Dragon);
+            player2.Deck.Add(FireElf);
 
             Loser = gameManager.StartGame(player1, player2);
 
-            Assert.That(Loser?.Elo, Is.EqualTo(95));
+            Assert.That(Loser.Elo, Is.EqualTo(95));
+        }
+
+        [Test]
+        public void AquirePackage_Test(){
+            ICardDao cardDao = new InMemoryCardDao();
+            ICardManager cardManager = new CardManager(cardDao);
+            
+            List<Card> cards = new List<Card>();
+            cardManager.CreatePackage(cards);
+
+            User user = new User("", "");
+
+            cardManager.AquirePackage(user);
+
+            Assert.That(user.Coins, Is.EqualTo(15));
+        }
+
+        [Test]
+        public void UserStack_Not_null_Test(){
+            ICardDao cardDao = new InMemoryCardDao();
+            ICardManager cardManager = new CardManager(cardDao);
+
+            User user = new User("", "");
+            List<Card> cards = new List<Card>();
+            cardManager.CreatePackage(cards);
+            cardManager.AquirePackage(user);
+
+            cardManager.ShowCards(user);
+
+            Assert.That(user.Stack != null);
+        }
+
+        [Test]
+        public void UserDeck_Not_null_Test(){
+            ICardDao cardDao = new InMemoryCardDao();
+            ICardManager cardManager = new CardManager(cardDao);
+
+            User user = new User("", "");
+            List<Card> cards = new List<Card>();
+            cardManager.CreatePackage(cards);
+            cardManager.AquirePackage(user);
+            cardManager.ShowDeck(user);
+
+            Assert.That(user.Deck != null);
+        }
+        
+        [Test]
+        public void Test17(){
+            
+        }
+
+        [Test]
+        public void Test18(){
+
+        }
+
+        [Test]
+        public void Test19(){
+
+        }
+
+        [Test]
+        public void Test20(){
+            
         }
     }
 }

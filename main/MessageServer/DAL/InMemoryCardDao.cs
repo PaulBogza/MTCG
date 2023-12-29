@@ -23,7 +23,7 @@ namespace SWE1.MessageServer.DAL
             return Package;
         }
         public void initDeck(User user){
-            if(user.Stack != null && user.Stack.Any()){
+            if(user.Stack.Count != 0 && user.Stack.Any()){
                 for(int i = 0; i < 4; i++){
                     tmpDeck?.Add(user.Stack.ElementAt(i));
                 }

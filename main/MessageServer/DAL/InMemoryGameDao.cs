@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using System.Xml.Serialization;
 [assembly: InternalsVisibleTo("UnitTests")]
 
 namespace SWE1.MessageServer.DAL
@@ -19,31 +20,49 @@ namespace SWE1.MessageServer.DAL
         public int Rounds { get; set; } = 1;
         public string? Winner { get; set; }
 
-        public User? StartGame(User Player1, User Player2){
+        public User StartGame(User Player1, User Player2){
+            User Loser = new User("Placeholder", "Placeholder");
             Card? losingCard;
+            Card card1 = new Card();
+            Card card2 = new Card();
+            if(Player1.Deck.Count != 0){
+                card1 = Player1.Deck.ElementAt(0);
+            }
+            if(Player2.Deck.Count != 0){
+                card2 = Player2.Deck.ElementAt(0);
+            }
             int i = 0;
-            while(Player1.Deck != null || Player2.Deck != null || Rounds < 20){
-                losingCard = Fight(Player1.Deck.ElementAt(i), Player2.Deck.ElementAt(i));
+            while(Player1.Deck?.Count != 0 || Player2.Deck?.Count != 0 || Rounds < 20){
+                losingCard = Fight(card1, card2);
                 i++;
                 Rounds++;
+                if(losingCard?.Name == card1.Name){
+                    Player1.Deck?.Remove(card1);
+                    break;
+                }
+                else if(losingCard?.Name == card2.Name){
+                    Player2.Deck?.Remove(card2);
+                    break;
+                }
+                else{
+                    continue;
+                }
             }
 
-            if(Player1.Deck == null){
-                Winner = Player2.Username;
+            if(Player1.Deck?.Count == 0){
                 Player1.Elo += -5;
                 Player2.Elo += 3;
+                Loser = Player1;
             }
-            else if(Player2.Deck == null){
-                Winner = Player1.Username;                
+            else if(Player2.Deck?.Count == 0){
                 Player2.Elo += -5;
                 Player1.Elo += 3;
+                Loser = Player2;
             }
             else{
-                Winner = "Draw";
+                System.Console.WriteLine("Draw");
             }
-            System.Console.WriteLine(Player1.Elo);
-            System.Console.WriteLine(Player2.Elo);
-            return Player1;
+            return Loser;
         }
 
         public void Trade(User player1, User player2){}
