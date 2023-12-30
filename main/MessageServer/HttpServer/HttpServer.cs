@@ -37,8 +37,8 @@ namespace SWE1.MessageServer.HttpServer
             {
                 var client = _listener.AcceptTcpClient();
                 var clientHandler = new HttpClientHandler(client);
-                var thread = new Thread(() => HandleClient(clientHandler));
-                thread.Start();
+                new Task(() => HandleClient(clientHandler)).Start();
+                //HandleClient(clientHandler);
             }
         }
 

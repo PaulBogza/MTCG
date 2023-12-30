@@ -18,30 +18,33 @@ namespace SWE1.MessageServer.DAL
     internal class InMemoryGameDao : IGameDao
     {
         public int Rounds { get; set; } = 1;
-        public string? Winner { get; set; }
+        public string? Winner { get; set; } = null;
 
         public User StartGame(User Player1, User Player2){
-            User Loser = new User("Placeholder", "Placeholder");
+            System.Console.WriteLine("In start game");
+            User Loser = new User("", "");
             Card? losingCard;
             Card card1 = new Card();
             Card card2 = new Card();
-            if(Player1.Deck.Count != 0){
-                card1 = Player1.Deck.ElementAt(0);
-            }
-            if(Player2.Deck.Count != 0){
-                card2 = Player2.Deck.ElementAt(0);
-            }
             int i = 0;
-            while(Player1.Deck?.Count != 0 || Player2.Deck?.Count != 0 || Rounds < 20){
+            while((Player1.Deck.Count > 0 && Player2.Deck.Count > 0) || Rounds < 20){
+                System.Console.WriteLine("Inside the while");
+                card1 = Player1.Deck.ElementAt(i);
+                card2 = Player2.Deck.ElementAt(i);
+                System.Console.WriteLine("hallo");
                 losingCard = Fight(card1, card2);
-                i++;
                 Rounds++;
-                if(losingCard?.Name == card1.Name){
-                    Player1.Deck?.Remove(card1);
+                i++;
+                if(losingCard?.Id == card1.Id){
+                    Player2.Deck.Add(card1);
+                    Player1.Deck.Remove(card1);
+                    //System.Console.WriteLine($"{Player2.Username} won this round");
                     break;
                 }
-                else if(losingCard?.Name == card2.Name){
-                    Player2.Deck?.Remove(card2);
+                else if(losingCard?.Id == card2.Id){
+                    Player1.Deck.Add(card2);
+                    Player2.Deck.Remove(card2);
+                    //System.Console.WriteLine($"{Player1.Username} won this round");
                     break;
                 }
                 else{
@@ -49,15 +52,19 @@ namespace SWE1.MessageServer.DAL
                 }
             }
 
-            if(Player1.Deck?.Count == 0){
+            if(Player1.Deck.Count == 0){
                 Player1.Elo += -5;
                 Player2.Elo += 3;
                 Loser = Player1;
+                System.Console.WriteLine($"{Player2.Username} won battle");
+                return Player2;
             }
-            else if(Player2.Deck?.Count == 0){
+            else if(Player2.Deck.Count == 0){
                 Player2.Elo += -5;
                 Player1.Elo += 3;
                 Loser = Player2;
+                System.Console.WriteLine($"{Player1.Username} won battle");
+                return Player1;
             }
             else{
                 System.Console.WriteLine("Draw");

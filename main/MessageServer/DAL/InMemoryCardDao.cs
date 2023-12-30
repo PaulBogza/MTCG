@@ -14,30 +14,29 @@ namespace SWE1.MessageServer.DAL
 {
     internal class InMemoryCardDao : ICardDao
     {
-        private readonly List<List<Card>> PackageCollection = new();
-        public List<Card>? tmpDeck = new();
-        public List<Card>? tmpStack = new();
+        private readonly Queue<List<Card>> PackageCollection = new();
+        public List<Card> tmpDeck = new();
+        public List<Card> tmpStack = new();
 
         public List<Card>? CreatePackage(List<Card> Package){
-            PackageCollection.Add(Package);
+            PackageCollection.Enqueue(Package);
             return Package;
         }
         public void initDeck(User user){
-            if(user.Stack.Count != 0 && user.Stack.Any()){
+            if(user.Stack.Count > 0 && user.Stack.Any()){
                 for(int i = 0; i < 4; i++){
-                    tmpDeck?.Add(user.Stack.ElementAt(i));
+                    tmpDeck.Add(user.Stack.ElementAt(i));
                 }
-                user.Deck = tmpDeck;
-                tmpDeck = null;
+                user.Deck.AddRange(tmpDeck);
+                tmpDeck.Clear();
             }
         }
         public bool AquirePackage(User user){
             if(user.Coins > 4 && (PackageCollection.Count >= 1)){
                 user.Coins += -5;
-                tmpStack = PackageCollection.ElementAt(0);
-                user.Stack = tmpStack;
-                tmpStack = null;
-                PackageCollection.RemoveAt(0);
+                tmpStack.AddRange(PackageCollection.Dequeue());
+                user.Stack.AddRange(tmpStack);
+                tmpStack.Clear();
                 return true;
             }
             else{
@@ -48,33 +47,31 @@ namespace SWE1.MessageServer.DAL
             return user.Stack;
         }
         public List<Card>? ShowDeck(User user){
-            if(user.Deck == null){
+            if(!user.Deck.Any()){
                 initDeck(user);
             }
             return user.Deck;
         }
         public List<Card>? UpdateDeck(User user, List<string> payload){
             Card forbiddenCard = new Card() {Id = "666"};
-            List<Card>? forbiddenList = null;
-            tmpDeck = null;
-            if(payload.Count == 4 && user.Stack != null){
-                for(int i = 0; i < user.Stack?.Count; i++){
+            List<Card> forbiddenDeck = new();
+            tmpDeck.Clear();
+            if(payload.Count == 4 && user.Stack.Any()){
+                for(int i = 0; i < user.Stack.Count; i++){
                     for(int j = 0; j < payload.Count; j++){
                         if(payload.ElementAt(j) == user.Stack.ElementAt(i).Id){
-                            tmpDeck?.Add(user.Stack.ElementAt(i));
+                            tmpDeck.Add(user.Stack.ElementAt(i));
                         }
                     }
                 }
             }
-            if(tmpDeck?.Count == 4){
-                foreach(var card in tmpDeck){
-                    user.Deck?.Add(card);
-                }
+            if(tmpDeck.Count == 4){
+                user.Deck.AddRange(tmpDeck);
                 return user.Deck;
             }
-            else if(tmpDeck?.Count != 4){
-                forbiddenList?.Add(forbiddenCard);
-                return forbiddenList;
+            else if(tmpDeck.Count != 4){
+                forbiddenDeck.Add(forbiddenCard);
+                return forbiddenDeck;
             }
             else{ //unchanged version of user deck
                 return user.Deck;

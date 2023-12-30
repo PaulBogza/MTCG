@@ -9,10 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWE1.MessageServer.API.Routing.Messages{
+namespace SWE1.MessageServer.API.Routing.Cards{
 
     internal class ConfigureDeckCommand : IRouteCommand
     {
@@ -33,7 +34,8 @@ namespace SWE1.MessageServer.API.Routing.Messages{
             try{
                 Deck = _cardManager.UpdateDeck(_currentUser, _payload);
             }
-            catch (UserNotFoundException){
+            catch (Exception e){
+                System.Console.WriteLine(e);
                 Deck = null;
             }
             HttpResponse response;
@@ -43,7 +45,7 @@ namespace SWE1.MessageServer.API.Routing.Messages{
             else if(_currentUser.Token != token){
                 response = new HttpResponse(StatusCode.Unauthorized);
             }
-            else if(Deck.ElementAt(0).Id == "666"){
+            else if(Deck.Count > 0 && Deck.ElementAt(0).Id == "666"){
                 response = new HttpResponse(StatusCode.Forbidden);
             }
             else{

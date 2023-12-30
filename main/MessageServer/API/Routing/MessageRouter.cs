@@ -1,7 +1,8 @@
 ﻿using Newtonsoft.Json;
-using SWE1.MessageServer.API.Routing.Messages;
 using SWE1.MessageServer.API.Routing.Packages;
 using SWE1.MessageServer.API.Routing.Users;
+using SWE1.MessageServer.API.Routing.Game;
+using SWE1.MessageServer.API.Routing.Cards;
 using SWE1.MessageServer.BLL;
 using SWE1.MessageServer.HttpServer;
 using SWE1.MessageServer.HttpServer.Request;
@@ -51,6 +52,7 @@ namespace SWE1.MessageServer.API.Routing
                 return matching;
             }
 
+            #pragma warning disable CS8321 // Local function is declared but never used
             int parseId(string path){
                 int val = 0;
                 if(path.StartsWith("/users")){
@@ -61,6 +63,7 @@ namespace SWE1.MessageServer.API.Routing
                 }     
                 return val;
             };
+            #pragma warning restore CS8321 // Local function is declared but never used
 
             string? parseParameters(string path){
                 string? parameter = null;
@@ -94,7 +97,7 @@ namespace SWE1.MessageServer.API.Routing
 
                     { Method: HttpMethod.Get, ResourcePath: "/stats" } => new ShowStatsCommand(_userManager, GetIdentity(request)),
                     { Method: HttpMethod.Get, ResourcePath: "/scoreboard" } => new ShowScoreboardCommand(_userManager, GetIdentity(request)),
-                    //{ Method: HttpMethod.Get, ResourcePath: "/deck" } => new StartBattleCommand(_cardManager, GetIdentity(request)),
+                    { Method: HttpMethod.Post, ResourcePath: "/battles" } => new EnterLobbyCommand(_cardManager, _gameManager, GetIdentity(request)),
                     
                     _ => null
                 };

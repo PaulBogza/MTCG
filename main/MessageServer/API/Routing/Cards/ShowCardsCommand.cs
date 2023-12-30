@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWE1.MessageServer.API.Routing.Messages{
+namespace SWE1.MessageServer.API.Routing.Cards{
 
     internal class ShowCardsCommand : IRouteCommand
     {
@@ -29,7 +29,8 @@ namespace SWE1.MessageServer.API.Routing.Messages{
             try{
                 Stack = _cardManager.ShowCards(_currentUser);
             }
-            catch (UserNotFoundException){  
+            catch (Exception e){
+                System.Console.WriteLine(e);
                 Stack = null;
             }
             HttpResponse response;

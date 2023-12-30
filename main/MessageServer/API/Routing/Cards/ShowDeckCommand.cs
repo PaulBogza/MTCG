@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWE1.MessageServer.API.Routing.Messages{
+namespace SWE1.MessageServer.API.Routing.Cards{
 
     internal class ShowDeckCommand : IRouteCommand
     {

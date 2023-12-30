@@ -22,7 +22,7 @@ namespace SWE1.MessageServer.BLL
             return _cardDao.ShowDeck(user) ?? throw new UserNotFoundException("No Deck found");
         }
         public List<Card>? UpdateDeck(User user, List<string> payload){
-            return user.Deck;
+            return _cardDao.UpdateDeck(user, payload);
         }
         public List<Card>? CreatePackage(List<Card> Package){
             return _cardDao.CreatePackage(Package) ?? throw new UserNotFoundException();
