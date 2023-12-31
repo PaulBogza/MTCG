@@ -30,9 +30,9 @@ namespace SWE1.MessageServer.API.Routing.Packages
 
         public HttpResponse Execute(){
             string adminToken = "admin-mtcgToken";
-            List<Card>? Package = _payload;
+            List<Card>? Package;
             try{
-                Package = _cardManager.CreatePackage(Package);
+                Package = _cardManager.CreatePackage(_payload);
             }
             catch(UserNotFoundException){
                 Package = null;

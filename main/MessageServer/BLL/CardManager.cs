@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SWE1.MessageServer.DAL;
+using System.Net.Http.Headers;
 
 
 namespace SWE1.MessageServer.BLL
@@ -16,16 +17,54 @@ namespace SWE1.MessageServer.BLL
             _cardDao = cardDao;
         }
         public List<Card>? ShowCards(User user){
-            return _cardDao.ShowCards(user) ?? throw new UserNotFoundException("No Cards found");
+            return _cardDao.ShowCards(user) ?? throw new Exception("No Cards found");
         }
         public List<Card>? ShowDeck(User user){
-            return _cardDao.ShowDeck(user) ?? throw new UserNotFoundException("No Deck found");
+            return _cardDao.ShowDeck(user) ?? throw new Exception("No Deck found");
         }
         public List<Card>? UpdateDeck(User user, List<string> payload){
             return _cardDao.UpdateDeck(user, payload);
         }
         public List<Card>? CreatePackage(List<Card> Package){
-            return _cardDao.CreatePackage(Package) ?? throw new UserNotFoundException();
+            foreach(var card in Package){
+                if(card.Name != null){
+                    if(card.Name.Contains("Water")){
+                        card.Element = ElementType.Water;
+                    }
+                    else if(card.Name.Contains("Fire")){
+                        card.Element = ElementType.Fire;
+                    }
+                    else{
+                        card.Element = ElementType.Normal;
+                    }
+
+                    if(card.Name.Contains("Goblin")){
+                        card.Type = "Goblin";
+                    }
+                    else if(card.Name.Contains("FireElf")){
+                        card.Type = "FireElf";
+                    }
+                    else if(card.Name.Contains("Dragon")){
+                        card.Type = "Dragon";
+                    }
+                    else if(card.Name.Contains("Knight")){
+                        card.Type = "Knight";
+                    }
+                    else if(card.Name.Contains("Kraken")){
+                        card.Type = "Kraken";
+                    }
+                    else if(card.Name.Contains("Wizard")){
+                        card.Type = "Wizard";
+                    }
+                    else if(card.Name.Contains("Ork")){
+                        card.Type = "Ork";
+                    }
+                    else if(card.Name.Contains("Spell")){
+                        card.Type = "Spell";
+                    }
+                }
+            }
+            return _cardDao.CreatePackage(Package) ?? throw new Exception();
         }
         public bool AquirePackage(User user){
             return _cardDao.AquirePackage(user);

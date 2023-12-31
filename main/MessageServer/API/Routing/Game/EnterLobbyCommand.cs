@@ -54,7 +54,7 @@ namespace SWE1.MessageServer.API.Routing.Game
                 }
                 if(_results.TryGetValue(_player, out var result) && result != null){
                     _results.Remove(_player, out _);
-                    return new HttpResponse(StatusCode.Ok, (result.Username != "") ? $"{result.Username} won the battle" : "Draw");
+                    return new HttpResponse(StatusCode.Ok, (result.Username != "") ? $"{result.Username} won the battle\r\n" : "Draw\r\n");
                 }
                 
                 Thread.Sleep(100);

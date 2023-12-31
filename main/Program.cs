@@ -7,6 +7,7 @@ using SWE1.MessageServer.DAL;
 using SWE1.MessageServer.HttpServer;
 using SWE1.MessageServer.Models;
 using System.Net;
+using System.Runtime.ExceptionServices;
 
 namespace myMTCG{
     class Program{

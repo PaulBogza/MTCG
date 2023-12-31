@@ -21,55 +21,53 @@ namespace SWE1.MessageServer.DAL
         public string? Winner { get; set; } = null;
 
         public User StartGame(User Player1, User Player2){
-            System.Console.WriteLine("In start game");
-            User Loser = new User("", "");
+            User Winner = new User("", "");
             Card? losingCard;
-            Card card1 = new Card();
-            Card card2 = new Card();
-            int i = 0;
-            while((Player1.Deck.Count > 0 && Player2.Deck.Count > 0) || Rounds < 20){
-                System.Console.WriteLine("Inside the while");
-                card1 = Player1.Deck.ElementAt(i);
-                card2 = Player2.Deck.ElementAt(i);
-                System.Console.WriteLine("hallo");
+            Card card1 = new();
+            Card card2 = new();
+
+            while(Player1.Deck.Count > 0 && Player2.Deck.Count > 0 && Rounds <= 20){
+                card1 = Player1.Deck.First();
+                card2 = Player2.Deck.First();
                 losingCard = Fight(card1, card2);
                 Rounds++;
-                i++;
-                if(losingCard?.Id == card1.Id){
+                if(losingCard == null){
+                    System.Console.WriteLine("Round was a draw\n");
+                    continue;
+                }
+                else if(losingCard.Id == card1.Id){
                     Player2.Deck.Add(card1);
                     Player1.Deck.Remove(card1);
-                    //System.Console.WriteLine($"{Player2.Username} won this round");
-                    break;
                 }
-                else if(losingCard?.Id == card2.Id){
+                else if(losingCard.Id == card2.Id){
                     Player1.Deck.Add(card2);
                     Player2.Deck.Remove(card2);
-                    //System.Console.WriteLine($"{Player1.Username} won this round");
-                    break;
                 }
                 else{
-                    continue;
+                    break;
                 }
             }
 
             if(Player1.Deck.Count == 0){
                 Player1.Elo += -5;
                 Player2.Elo += 3;
-                Loser = Player1;
-                System.Console.WriteLine($"{Player2.Username} won battle");
-                return Player2;
+                Player1.Losses += 1;
+                Player2.Wins += 1;
+                Winner = Player2;
+                System.Console.WriteLine($"{Player2.Username} won battle\r\n");
             }
             else if(Player2.Deck.Count == 0){
                 Player2.Elo += -5;
                 Player1.Elo += 3;
-                Loser = Player2;
-                System.Console.WriteLine($"{Player1.Username} won battle");
-                return Player1;
+                Player2.Losses += 1;
+                Player1.Wins += 1;
+                Winner = Player1;
+                System.Console.WriteLine($"{Player1.Username} won battle\r\n");
             }
             else{
-                System.Console.WriteLine("Draw");
+                System.Console.WriteLine("Draw\r\n");
             }
-            return Loser;
+            return Winner;
         }
 
         public void Trade(User player1, User player2){}

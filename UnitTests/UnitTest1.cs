@@ -178,15 +178,15 @@ namespace UnitTests{
 
             User player1 = new User("player1", "password");
             User player2 = new User("player2", "passworrd");
-            User Loser = new User("", "");
+            User Winner = new User("", "");
             MonsterCard Dragon = new MonsterCard("1", "Dragon", 10.0 , ElementType.Fire, "Dragon");
             MonsterCard FireElf = new MonsterCard("2", "FireElf", 5.0 ,ElementType.Fire, "FireElf");
             player1.Deck.Add(Dragon);
             player2.Deck.Add(FireElf);
 
-            Loser = gameManager.StartGame(player1, player2);
+            Winner = gameManager.StartGame(player1, player2);
 
-            Assert.That(Loser.Elo, Is.EqualTo(95));
+            Assert.That(Winner.Elo, Is.EqualTo(103));
         }
 
         [Test]

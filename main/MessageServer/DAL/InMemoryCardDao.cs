@@ -66,6 +66,7 @@ namespace SWE1.MessageServer.DAL
                 }
             }
             if(tmpDeck.Count == 4){
+                user.Deck.Clear();
                 user.Deck.AddRange(tmpDeck);
                 return user.Deck;
             }
