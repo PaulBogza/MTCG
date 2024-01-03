@@ -14,10 +14,13 @@ namespace SWE1.MessageServer.DAL
 {
     internal class DatabaseUserDao : IUserDao
     {
-        private const string CreateUserTableCommand = @"CREATE TABLE IF NOT EXISTS users (username varchar PRIMARY KEY, password varchar);";
+        private const string CreateUserTableCommand = @"CREATE TABLE IF NOT EXISTS users (id serial primary key, username varchar, password varchar, elo int not null, 
+                                                        wins int not null, losses int not null, coins int not null, userinfo text, stats text);";
+        private const string CheckIfUserExists = @"SELECT username FROM users WHERE username = @username";
         private const string SelectAllUsersCommand = @"SELECT username, password FROM users";
         private const string SelectUserByCredentialsCommand = "SELECT username, password FROM users WHERE username=@username AND password=@password";
-        private const string InsertUserCommand = @"INSERT INTO users(username, password) VALUES (@username, @password)";
+        private const string InsertUserCommand = @"INSERT INTO users(username, password, elo, wins, losses, coins) VALUES (@username, @password, @elo, @wins, @losses, @coins)";
+        private const string UpdateUserInfo = @"INSERT INTO users (userinfo) WHERE username = @user.username VALUES (@UserInfo)";
 
         private readonly string _connectionString;
 
@@ -27,9 +30,14 @@ namespace SWE1.MessageServer.DAL
             EnsureTables();
         }
 
-        //TODO: Make update user function for persistant database
-        public bool UpdateUser(User user, Dictionary<string, string> ?UserInfo){
-            user.UserInfo = UserInfo;
+        public bool UpdateUser(User user, Dictionary<string, string> UserInfo){
+            using var connection = new NpgsqlConnection(_connectionString);
+            connection.Open();
+
+            using var cmd = new NpgsqlCommand(UpdateUserInfo, connection);
+
+            cmd.Parameters.AddWithValue("userinfo", UserInfo);
+
             return true;
         }
         public User? GetUserByAuthToken(string authToken)
@@ -48,7 +56,6 @@ namespace SWE1.MessageServer.DAL
             cmd.Parameters.AddWithValue("username", username);
             cmd.Parameters.AddWithValue("password", password);
 
-            // take the first row, if any
             using var reader = cmd.ExecuteReader();
             if (reader.Read())
             {
@@ -71,10 +78,21 @@ namespace SWE1.MessageServer.DAL
         {
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
+            
+            using var check = new NpgsqlCommand(CheckIfUserExists, connection);
+            check.Parameters.AddWithValue("username", user.Username);
+            var rows = check.ExecuteReader();
+            if(rows.Read()){
+                throw new DuplicateUserException();
+            }
 
             using var cmd = new NpgsqlCommand(InsertUserCommand, connection);
             cmd.Parameters.AddWithValue("username", user.Username);
             cmd.Parameters.AddWithValue("password", user.Password);
+            cmd.Parameters.AddWithValue("elo", 100);
+            cmd.Parameters.AddWithValue("wins", 0);
+            cmd.Parameters.AddWithValue("losses", 0);
+            cmd.Parameters.AddWithValue("coins", 20);
             var affectedRows = cmd.ExecuteNonQuery();
             
             if(affectedRows > 0){

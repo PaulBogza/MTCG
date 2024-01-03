@@ -12,7 +12,7 @@ namespace SWE1.MessageServer.BLL
         User LoginUser(Credentials credentials, ICardManager cardManager);
         void RegisterUser(Credentials credentials);
         User GetUserByAuthToken(string authToken);
-        bool UpdateUser(User user, Dictionary<string, string> ?UserInfo);
+        bool UpdateUser(User user, Dictionary<string, string> UserInfo);
         User ShowStats(User user);
         List<UserStats> ShowScoreboard();
     }
