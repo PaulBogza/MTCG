@@ -44,7 +44,6 @@ namespace SWE1.MessageServer.API.Routing.Users
             }
             else
             {   
-                _cardManager.initDeck(user);
                 response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(user.Username).ToString());
             }
 

@@ -24,9 +24,11 @@ namespace SWE1.MessageServer.API.Routing.Packages
         }
 
         public HttpResponse Execute(){
+            if(_currentUser.Coins < 5) return new HttpResponse(StatusCode.Forbidden, JsonConvert.SerializeObject("Not enough coins!\r\n"));
+
             string token = $"{_currentUser.Username}-mtcgToken";
             bool success;
-            
+        
             success = _cardManager.AquirePackage(_currentUser);
 
             HttpResponse response;

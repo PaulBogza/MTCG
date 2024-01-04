@@ -13,8 +13,8 @@ namespace SWE1.MessageServer.Models
         public int Coins { get; set; } = 20;
         public List<Card> Stack{ get; set; } = new List<Card>();
         public List<Card> Deck{ get; set; } = new List<Card>();
-        public Dictionary <string, string> ?UserInfo { get; set; }
-        public Dictionary <string, dynamic> ?Stats { get; set; }
+        public Dictionary <string, string> UserInfo { get; set; } = new();
+        public Dictionary <string, dynamic> Stats { get; set; }
         = new Dictionary<string, dynamic> {{"Name", ""}, {"Elo", 100}, {"Wins", 0}, {"Losses", 0}};
         public string Token => $"{Username}-mtcgToken";
         public User(string username, string password)

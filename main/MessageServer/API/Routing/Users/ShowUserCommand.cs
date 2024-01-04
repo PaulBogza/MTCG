@@ -18,7 +18,7 @@ namespace SWE1.MessageServer.API.Routing.Users
         private User _currentUser;
         private string? _parameter;
         private readonly IUserManager _userManager;
-        private readonly Credentials? _credentials;
+        //private readonly Credentials _credentials;
 
         public ShowUserCommand(IUserManager userManager, User currentUser, string? parameter)
         {

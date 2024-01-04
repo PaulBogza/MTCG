@@ -11,7 +11,10 @@ using System.Net.Http.Headers;
 namespace SWE1.MessageServer.BLL
 {
     internal class CardManager : ICardManager
-    {
+    {        
+        private readonly Queue<List<Card>> PackageCollection = new();
+        public List<Card> tmpDeck = new();
+        public List<Card> tmpStack = new();
         private readonly ICardDao _cardDao;
         public CardManager(ICardDao cardDao){
             _cardDao = cardDao;
@@ -23,7 +26,31 @@ namespace SWE1.MessageServer.BLL
             return _cardDao.ShowDeck(user) ?? throw new Exception("No Deck found");
         }
         public List<Card>? UpdateDeck(User user, List<string> payload){
-            return _cardDao.UpdateDeck(user, payload);
+            Card forbiddenCard = new Card() {Id = "666"};
+            List<Card> forbiddenDeck = new();
+            tmpDeck.Clear();
+            if(payload.Count == 4 && user.Stack.Any()){
+                for(int i = 0; i < user.Stack.Count; i++){
+                    for(int j = 0; j < payload.Count; j++){
+                        if(payload.ElementAt(j) == user.Stack.ElementAt(i).Id){
+                            tmpDeck.Add(user.Stack.ElementAt(i));
+                        }
+                    }
+                }
+            }
+            if(tmpDeck.Count == 4){
+                user.Deck.Clear();
+                user.Deck.AddRange(tmpDeck);
+                return user.Deck;
+            }
+            else if(tmpDeck.Count != 4){
+                forbiddenDeck.Add(forbiddenCard);
+                return forbiddenDeck;
+            }
+            else{ //unchanged version of user deck
+                return user.Deck;
+            }
+            //return _cardDao.UpdateDeck(user, payload);
         }
         public List<Card>? CreatePackage(List<Card> Package){
             foreach(var card in Package){
@@ -71,7 +98,14 @@ namespace SWE1.MessageServer.BLL
         }
 
         public void initDeck(User user){
-            _cardDao.initDeck(user);
+            if(user.Stack.Count > 0 && user.Stack.Any()){
+                for(int i = 0; i < 4; i++){
+                    tmpDeck.Add(user.Stack.ElementAt(i));
+                }
+                user.Deck.AddRange(tmpDeck);
+                tmpDeck.Clear();
+            }
+            //_cardDao.initDeck(user);
         }
     }
 }

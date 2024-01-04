@@ -17,17 +17,15 @@ namespace myMTCG{
 
             var connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=mydb";
             IGameDao gameDao = new InMemoryGameDao();
-            IMessageDao messageDao = new InMemoryMessageDao();
         
             ICardDao cardDao =  new DatabaseCardDao(connectionString);
             IUserDao userDao = new DatabaseUserDao(connectionString);
 
             IGameManager gameManager = new GameManager(gameDao);
-            IMessageManager messageManager = new MessageManager(messageDao);
             IUserManager userManager = new UserManager(userDao);
             ICardManager cardManager = new CardManager(cardDao);
 
-            var router = new MessageRouter(userManager, messageManager, cardManager, gameManager);
+            var router = new MessageRouter(userManager, cardManager, gameManager);
             var server = new HttpServer(router, IPAddress.Any, 10001);
             server.Start();
         }

@@ -23,16 +23,14 @@ namespace SWE1.MessageServer.API.Routing
     internal class MessageRouter : IRouter
     {
         private readonly IUserManager _userManager;
-        private readonly IMessageManager _messageManager;
         private readonly ICardManager _cardManager;
         private readonly IGameManager _gameManager;
         private readonly IdentityProvider _identityProvider;
         private readonly IdRouteParser _routeParser;
 
-        public MessageRouter(IUserManager userManager, IMessageManager messageManager, ICardManager cardManager, IGameManager gameManager)
+        public MessageRouter(IUserManager userManager, ICardManager cardManager, IGameManager gameManager)
         {
             _userManager = userManager;
-            _messageManager = messageManager;
             _cardManager = cardManager;
             _gameManager = gameManager;
             _identityProvider = new IdentityProvider(userManager);
