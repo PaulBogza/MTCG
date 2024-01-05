@@ -51,7 +51,7 @@ namespace SWE1.MessageServer.API.Routing.Users
             else
             {   
                 stats = new(user.Username, user.Elo, user.Wins, user.Losses);
-                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(stats).ToString());
+                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(stats, Formatting.Indented).ToString());
             }
 
             return response;

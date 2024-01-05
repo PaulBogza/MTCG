@@ -22,15 +22,6 @@ namespace SWE1.MessageServer.DAL
             PackageCollection.Enqueue(Package);
             return Package;
         }
-        public void initDeck(User user){
-            if(user.Stack.Count > 0 && user.Stack.Any()){
-                for(int i = 0; i < 4; i++){
-                    tmpDeck.Add(user.Stack.ElementAt(i));
-                }
-                user.Deck.AddRange(tmpDeck);
-                tmpDeck.Clear();
-            }
-        }
         public bool AquirePackage(User user){
             if(user.Coins > 4 && (PackageCollection.Count >= 1)){
                 user.Coins += -5;
@@ -47,9 +38,6 @@ namespace SWE1.MessageServer.DAL
             return user.Stack;
         }
         public List<Card>? ShowDeck(User user){
-            if(!user.Deck.Any()){
-                initDeck(user);
-            }
             return user.Deck;
         }
         public List<Card>? UpdateDeck(User user, List<string> payload){

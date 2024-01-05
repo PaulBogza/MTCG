@@ -30,7 +30,7 @@ namespace SWE1.MessageServer.API.Routing.Cards{
         public HttpResponse Execute()
         {
             string token = $"{_currentUser.Username}-mtcgToken";
-            List<Card>? Deck = null;
+            List<Card>? Deck;
             try{
                 Deck = _cardManager.UpdateDeck(_currentUser, _payload);
             }
@@ -49,7 +49,7 @@ namespace SWE1.MessageServer.API.Routing.Cards{
                 response = new HttpResponse(StatusCode.Forbidden);
             }
             else{
-                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(Deck).ToString());
+                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(Deck, Formatting.Indented).ToString());
             }
             return response;
         }

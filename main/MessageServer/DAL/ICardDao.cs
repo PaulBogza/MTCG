@@ -14,6 +14,5 @@ namespace SWE1.MessageServer.DAL
         List<Card>? CreatePackage(List<Card> Package);
         bool AquirePackage(User user);
         List<Card>? UpdateDeck(User user, List<string> payload);
-        void initDeck(User user);
     }
 }

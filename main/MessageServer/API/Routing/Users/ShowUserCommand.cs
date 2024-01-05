@@ -46,7 +46,7 @@ namespace SWE1.MessageServer.API.Routing.Users
             if (user != null && (token == user.Token || adminToken == user.Token))
             {
                 _userManager.UpdateUser(_currentUser, _currentUser.UserInfo);
-                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(user.UserInfo).ToString());
+                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(user.UserInfo, Formatting.Indented).ToString());
             }
             else if(user == null){
                 response = new HttpResponse(StatusCode.NotFound);

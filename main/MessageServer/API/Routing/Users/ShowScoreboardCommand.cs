@@ -49,7 +49,7 @@ namespace SWE1.MessageServer.API.Routing.Users
             }
             else
             {   
-                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(Scoreboard).ToString());
+                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(Scoreboard, Formatting.Indented).ToString());
             }
 
             return response;

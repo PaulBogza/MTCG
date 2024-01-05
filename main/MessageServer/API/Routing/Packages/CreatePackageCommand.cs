@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Npgsql;
 using SWE1.MessageServer.BLL;
 using SWE1.MessageServer.DAL;
 using SWE1.MessageServer.HttpServer.Response;
@@ -34,12 +35,14 @@ namespace SWE1.MessageServer.API.Routing.Packages
             try{
                 Package = _cardManager.CreatePackage(_payload);
             }
-            catch(UserNotFoundException){
-                Package = null;
+            catch(PostgresException e){
+                System.Console.WriteLine(e.Message);
+                return new HttpResponse(StatusCode.Conflict);
             }
+
             HttpResponse response;
             if(Package != null && (adminToken == _adminUserToken)){
-                response = new HttpResponse(StatusCode.Created, JsonConvert.SerializeObject(Package));
+                response = new HttpResponse(StatusCode.Created, JsonConvert.SerializeObject(Package, Formatting.Indented).ToString());
             }
             else if(Package != null && adminToken == null){
                 response = new HttpResponse(StatusCode.Unauthorized);

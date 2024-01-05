@@ -11,10 +11,7 @@ using System.Net.Http.Headers;
 namespace SWE1.MessageServer.BLL
 {
     internal class CardManager : ICardManager
-    {        
-        private readonly Queue<List<Card>> PackageCollection = new();
-        public List<Card> tmpDeck = new();
-        public List<Card> tmpStack = new();
+    {
         private readonly ICardDao _cardDao;
         public CardManager(ICardDao cardDao){
             _cardDao = cardDao;
@@ -28,32 +25,29 @@ namespace SWE1.MessageServer.BLL
         public List<Card>? UpdateDeck(User user, List<string> payload){
             Card forbiddenCard = new Card() {Id = "666"};
             List<Card> forbiddenDeck = new();
-            tmpDeck.Clear();
-            if(payload.Count == 4 && user.Stack.Any()){
-                for(int i = 0; i < user.Stack.Count; i++){
-                    for(int j = 0; j < payload.Count; j++){
-                        if(payload.ElementAt(j) == user.Stack.ElementAt(i).Id){
-                            tmpDeck.Add(user.Stack.ElementAt(i));
-                        }
-                    }
-                }
-            }
-            if(tmpDeck.Count == 4){
-                user.Deck.Clear();
-                user.Deck.AddRange(tmpDeck);
+
+            if(payload.Count == 4){
+                user.Deck = _cardDao.UpdateDeck(user, payload)!;
                 return user.Deck;
             }
-            else if(tmpDeck.Count != 4){
+            else if(payload.Count != 4){
                 forbiddenDeck.Add(forbiddenCard);
                 return forbiddenDeck;
             }
-            else{ //unchanged version of user deck
+            else{
                 return user.Deck;
             }
-            //return _cardDao.UpdateDeck(user, payload);
+            
         }
         public List<Card>? CreatePackage(List<Card> Package){
-            foreach(var card in Package){
+            return _cardDao.CreatePackage(Package) ?? throw new Exception();
+        }
+        public bool AquirePackage(User user){
+            return _cardDao.AquirePackage(user);
+        }
+
+        public List<Card> ParseCards(List<Card> Package){
+              foreach(var card in Package){
                 if(card.Name != null){
                     if(card.Name.Contains("Water")){
                         card.Element = ElementType.Water;
@@ -91,21 +85,7 @@ namespace SWE1.MessageServer.BLL
                     }
                 }
             }
-            return _cardDao.CreatePackage(Package) ?? throw new Exception();
-        }
-        public bool AquirePackage(User user){
-            return _cardDao.AquirePackage(user);
-        }
-
-        public void initDeck(User user){
-            if(user.Stack.Count > 0 && user.Stack.Any()){
-                for(int i = 0; i < 4; i++){
-                    tmpDeck.Add(user.Stack.ElementAt(i));
-                }
-                user.Deck.AddRange(tmpDeck);
-                tmpDeck.Clear();
-            }
-            //_cardDao.initDeck(user);
+            return Package;
         }
     }
 }

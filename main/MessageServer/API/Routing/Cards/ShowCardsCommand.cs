@@ -25,7 +25,7 @@ namespace SWE1.MessageServer.API.Routing.Cards{
         public HttpResponse Execute()
         {
             string token = $"{_currentUser.Username}-mtcgToken";
-            List<Card>? Stack = null;
+            List<Card>? Stack;
             try{
                 Stack = _cardManager.ShowCards(_currentUser);
             }
@@ -41,7 +41,7 @@ namespace SWE1.MessageServer.API.Routing.Cards{
                 response = new HttpResponse(StatusCode.Unauthorized);
             }
             else{
-                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(Stack).ToString());
+                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(Stack, Formatting.Indented).ToString());
             }
             return response;
         }

@@ -16,11 +16,15 @@ namespace myMTCG{
             // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/member-access-operators#null-conditional-operators--and-
 
             var connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=mydb";
-            IGameDao gameDao = new InMemoryGameDao();
-        
-            ICardDao cardDao =  new DatabaseCardDao(connectionString);
-            IUserDao userDao = new DatabaseUserDao(connectionString);
+            var conn = new NpgsqlConnection(connectionString);
+            conn.Open();
+            using var cmd = new NpgsqlCommand("DROP TABLE IF EXISTS packages; DROP TABLE IF EXISTS deck; DROP TABLE IF EXISTS cards; DROP TABLE IF EXISTS users;", conn);
+            cmd.ExecuteNonQuery();
 
+            IGameDao gameDao = new DatabaseGameDao(connectionString);
+            IUserDao userDao = new DatabaseUserDao(connectionString);
+            ICardDao cardDao =  new DatabaseCardDao(connectionString);
+            
             IGameManager gameManager = new GameManager(gameDao);
             IUserManager userManager = new UserManager(userDao);
             ICardManager cardManager = new CardManager(cardDao);
@@ -28,6 +32,8 @@ namespace myMTCG{
             var router = new MessageRouter(userManager, cardManager, gameManager);
             var server = new HttpServer(router, IPAddress.Any, 10001);
             server.Start();
+
+
         }
     }
 }

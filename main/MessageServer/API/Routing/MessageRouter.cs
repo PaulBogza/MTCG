@@ -90,7 +90,8 @@ namespace SWE1.MessageServer.API.Routing
                     { Method: HttpMethod.Post, ResourcePath: "/transactions/packages" } => new AquirePackageCommand(_cardManager, GetIdentity(request)),
 
                     { Method: HttpMethod.Get, ResourcePath: "/cards" } => new ShowCardsCommand(_cardManager, GetIdentity(request)),
-                    { Method: HttpMethod.Get, ResourcePath: "/deck" } => new ShowDeckCommand(_cardManager, GetIdentity(request)),
+                    { Method: HttpMethod.Get, ResourcePath: "/deck" } => new ShowDeckCommand(_cardManager, GetIdentity(request), "json"),
+                    { Method: HttpMethod.Get, ResourcePath: "/deck?format=plain" } => new ShowDeckCommand(_cardManager, GetIdentity(request), "text"),
                     { Method: HttpMethod.Put, ResourcePath: "/deck" } => new ConfigureDeckCommand(_cardManager, GetIdentity(request), Deserialize<List<string>>(request.Payload)),
 
                     { Method: HttpMethod.Get, ResourcePath: "/stats" } => new ShowStatsCommand(_userManager, GetIdentity(request)),

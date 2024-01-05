@@ -14,16 +14,16 @@ namespace SWE1.MessageServer.DAL
 {
     internal class DatabaseUserDao : IUserDao
     {
-        private const string CreateUserTableCommand = @"CREATE TABLE IF NOT EXISTS users (id serial primary key, username varchar, password varchar, elo int not null, 
-                                                        wins int not null, losses int not null, coins int not null, userinfo text, stats text);";
+        private const string CreateUserTableCommand = @"CREATE TABLE IF NOT EXISTS users (id serial PRIMARY KEY, username varchar, password varchar, elo int, 
+                                                        wins int, losses int, coins int, userinfo text, stats text);";
         private const string CheckIfUserExists = @"SELECT username FROM users WHERE username = @username";
         private const string SelectAllUsersCommand = @"SELECT username, password FROM users";
-        private const string SelectUserByCredentialsCommand = "SELECT username, password FROM users WHERE username=@username AND password=@password";
+        private const string SelectUserByCredentialsCommand = "SELECT * FROM users WHERE username=@username AND password=@password";
         private const string InsertUserCommand = @"INSERT INTO users(username, password, elo, wins, losses, coins) VALUES (@username, @password, @elo, @wins, @losses, @coins)";
         private const string UpdateUserInfo = @"INSERT INTO users (userinfo) WHERE username = @user.username VALUES (@UserInfo)";
 
         private readonly string _connectionString;
-
+        private static readonly object _lockObject = new();
         public DatabaseUserDao(string connectionString)
         {
             _connectionString = connectionString;
@@ -85,15 +85,18 @@ namespace SWE1.MessageServer.DAL
             if(rows.Read()){
                 throw new DuplicateUserException();
             }
-
-            using var cmd = new NpgsqlCommand(InsertUserCommand, connection);
+            
+            using var connection2 = new NpgsqlConnection(_connectionString);
+            connection2.Open();
+            
+            using var cmd = new NpgsqlCommand(InsertUserCommand, connection2);
             cmd.Parameters.AddWithValue("username", user.Username);
             cmd.Parameters.AddWithValue("password", user.Password);
             cmd.Parameters.AddWithValue("elo", 100);
             cmd.Parameters.AddWithValue("wins", 0);
             cmd.Parameters.AddWithValue("losses", 0);
             cmd.Parameters.AddWithValue("coins", 20);
-            var affectedRows = cmd.ExecuteNonQuery();
+            var affectedRows = cmd.ExecuteNonQuery(); //gets stuck here
             
             if(affectedRows > 0){
                 return affectedRows > 0;
@@ -101,6 +104,7 @@ namespace SWE1.MessageServer.DAL
             else{
                 throw new DuplicateUserException();
             }
+
         }
 
         private void EnsureTables()
@@ -121,11 +125,10 @@ namespace SWE1.MessageServer.DAL
             using var cmd = new NpgsqlCommand(SelectAllUsersCommand, connection);
             using var reader = cmd.ExecuteReader();
             if(reader.Read()){
-                while (reader.Read())
-                {
+                do{
                     var user = ReadUser(reader);
                     users.Add(user);
-                }
+                }while (reader.Read());
 
                 return users;
             }
