@@ -177,6 +177,9 @@ namespace UnitTests{
             IGameDao gameDao = new InMemoryGameDao();
             IGameManager gameManager = new GameManager(gameDao);
 
+            IUserDao userDao = new InMemoryUserDao();
+            IUserManager userManager = new UserManager(userDao);
+
             User player1 = new User("player1", "password");
             User player2 = new User("player2", "passworrd");
             List<string> log = new();
@@ -185,9 +188,9 @@ namespace UnitTests{
             player1.Deck.Add(Dragon);
             player2.Deck.Add(FireElf);
 
-            log = gameManager.StartGame(player1, player2);
+            gameManager.StartGame(player1, player2);
 
-            //Assert.That();
+            Assert.That(player1.Elo, Is.EqualTo(95));
         }
 
         [Test]
@@ -255,7 +258,7 @@ namespace UnitTests{
    
             newUser = userDao.GetUserByCredentials(newUser.Username, newUser.Password)!;
 
-            Assert.That(newUser.Username, Is.EqualTo("test"));
+            Assert.That(newUser.Token, Is.EqualTo("test-mtcgToken"));
         }
 
         [Test]
