@@ -12,7 +12,6 @@ namespace SWE1.MessageServer.BLL
     internal interface IGameManager
     {
         User StartGame(User player1, User player2);
-        void Trade(User player1, User player2);
         Card? Fight(Card card1, Card card2);
         double checkEffect(Card card1, Card card2);
         double checkSpecialInteraction(Card card1, Card card2);

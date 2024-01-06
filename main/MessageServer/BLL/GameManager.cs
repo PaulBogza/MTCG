@@ -19,9 +19,6 @@ namespace SWE1.MessageServer.BLL
         public User StartGame(User player1, User player2){
             return _gameDao.StartGame(player1, player2);
         }
-        public void Trade(User player1, User player2){
-            _gameDao.Trade(player1, player2);
-        }
         public Card? Fight(Card card1, Card card2){
             return _gameDao.Fight(card1, card2);
         }

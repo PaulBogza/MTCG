@@ -4,6 +4,7 @@ using SWE1.MessageServer.API.Routing;
 using SWE1.MessageServer.BLL;
 using SWE1.MessageServer.DAL;
 using SWE1.MessageServer.HttpServer;
+using Npgsql;
 
 namespace UnitTests{
     public class Tests
@@ -234,23 +235,47 @@ namespace UnitTests{
         }
         
         [Test]
-        public void Test17(){
-            
+        public void Register_User_Test(){
+            var connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=mydb";
+            using var conn = new NpgsqlConnection(connectionString);
+            conn.Open();
+            using var cmd = new NpgsqlCommand("DROP TABLE IF EXISTS packages; DROP TABLE IF EXISTS deck; DROP TABLE IF EXISTS cards; DROP TABLE IF EXISTS users;", conn);
+            cmd.ExecuteNonQuery();
+            IUserDao userDao = new DatabaseUserDao(connectionString);
+            User newUser = new("test", "test");
+
+            Assert.That(userDao.InsertUser(newUser));
         }
 
         [Test]
-        public void Test18(){
+        public void Login_User_Test(){
+            var connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=mydb";
+            IUserDao userDao = new DatabaseUserDao(connectionString);
+            User newUser = new("test", "test");
+   
+            newUser = userDao.GetUserByCredentials(newUser.Username, newUser.Password)!;
 
+            Assert.That(newUser.Username, Is.EqualTo("test"));
         }
 
         [Test]
-        public void Test19(){
+        public void Update_User_Tets(){
+            var connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=mydb";
+            IGameDao gameDao = new DatabaseGameDao(connectionString);
+            User newUser = new("test", "test");
 
+            Assert.That(gameDao.UpdateUser(newUser), Is.EqualTo(true));
         }
-
+        
         [Test]
-        public void Test20(){
-            
+        public void Show_User_Stats_Test(){
+            var connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=mydb";
+            IUserDao userDao = new DatabaseUserDao(connectionString);
+            User newUser = new("test", "test");
+
+            newUser = userDao.ShowStats(newUser);
+
+            Assert.That(newUser.Elo, Is.EqualTo(100));
         }
     }
 }

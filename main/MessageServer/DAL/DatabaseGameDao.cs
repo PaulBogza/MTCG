@@ -104,8 +104,6 @@ namespace SWE1.MessageServer.DAL
             return Winner;
         }
 
-        public void Trade(User player1, User player2){}
-
         public Card? Fight(Card Card1, Card Card2){
             double tempDmg1 = Card1.Damage;
             double tempDmg2 = Card2.Damage;

@@ -19,7 +19,10 @@ namespace SWE1.MessageServer.DAL
     {
         public int Rounds { get; set; } = 1;
         public string? Winner { get; set; } = null;
-
+        
+        public bool UpdateUser(User user){
+            return true;
+        }
         public User StartGame(User Player1, User Player2){
             User Winner = new User("", "");
             Card? losingCard;
