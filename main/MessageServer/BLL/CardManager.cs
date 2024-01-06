@@ -46,8 +46,10 @@ namespace SWE1.MessageServer.BLL
             return _cardDao.AquirePackage(user);
         }
 
-        public List<Card> ParseCards(List<Card> Package){
-              foreach(var card in Package){
+        public List<Card> ParseCards(User user){
+            user.Deck = _cardDao.ShowCards(user);
+            System.Console.WriteLine(user.Deck.Count);
+              foreach(var card in user.Deck){
                 if(card.Name != null){
                     if(card.Name.Contains("Water")){
                         card.Element = ElementType.Water;
@@ -85,7 +87,7 @@ namespace SWE1.MessageServer.BLL
                     }
                 }
             }
-            return Package;
+            return user.Deck;
         }
     }
 }

@@ -48,7 +48,7 @@ namespace SWE1.MessageServer.API.Routing.Users
             HttpResponse response;
             if (user != null && (token == user.Token || adminToken == user.Token))
             {
-                _userManager.UpdateUser(_currentUser, _currentUser.UserInfo);
+                _userManager.UpdateUserInfo(_currentUser, _currentUser.UserInfo);
                 response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(_currentUser.UserInfo, Newtonsoft.Json.Formatting.Indented).ToString());
             }
             else if(user == null){

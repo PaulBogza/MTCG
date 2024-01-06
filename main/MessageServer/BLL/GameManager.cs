@@ -16,7 +16,7 @@ namespace SWE1.MessageServer.BLL
         public GameManager(IGameDao gameDao){
             _gameDao = gameDao;
         }
-        public User StartGame(User player1, User player2){
+        public List<string> StartGame(User player1, User player2){
             return _gameDao.StartGame(player1, player2);
         }
         public Card? Fight(Card card1, Card card2){

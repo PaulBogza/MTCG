@@ -50,28 +50,46 @@ namespace SWE1.MessageServer.DAL
                 return false;
             }
         }
-        public User StartGame(User Player1, User Player2){
-            User Winner = new User("", "");
+        public List<string> StartGame(User Player1, User Player2){
+            List<string> log = new List<string>();
             Card? losingCard;
             Card card1 = new();
             Card card2 = new();
 
-            while(Player1.Deck.Count > 0 && Player2.Deck.Count > 0 && Rounds <= 20){
+            //System.Console.WriteLine(Player1.Deck.Count);
+            //System.Console.WriteLine(Player2.Deck.Count);
+            while(Player1.Deck.Count > 0 && Player2.Deck.Count > 0 && Rounds < 20){
                 card1 = Player1.Deck.First();
                 card2 = Player2.Deck.First();
                 losingCard = Fight(card1, card2);
                 Rounds++;
                 if(losingCard == null){
-                    System.Console.WriteLine("Round was a draw\n");
+                    System.Console.WriteLine("Draw");
+                    log.Add($"Round {Rounds} was a draw");
+                    foreach(var item in log){
+                        System.Console.WriteLine(item);
+                    }
                     continue;
                 }
                 else if(losingCard.Id == card1.Id){
+                    System.Console.WriteLine("card2 won");
                     Player2.Deck.Add(card1);
                     Player1.Deck.Remove(card1);
+                    log.Add($"{card2.Name} defeated {card1.Name}");
+                    log.Add($"Player2 won round {Rounds}");
+                       foreach(var item in log){
+                        System.Console.WriteLine(item);
+                    }
                 }
                 else if(losingCard.Id == card2.Id){
+                    System.Console.WriteLine("card1 won");
                     Player1.Deck.Add(card2);
                     Player2.Deck.Remove(card2);
+                    log.Add($"{card1.Name} defeated {card2.Name}");
+                    log.Add($"Player1 won round {Rounds}");
+                       foreach(var item in log){
+                        System.Console.WriteLine(item);
+                    }
                 }
                 else{
                     break;
@@ -83,25 +101,26 @@ namespace SWE1.MessageServer.DAL
                 Player2.Elo += 3;
                 Player1.Losses += 1;
                 Player2.Wins += 1;
-                Winner = Player2;
+                log.Add($"{Player2.Username} won the battle");
                 UpdateUser(Player1);
                 UpdateUser(Player2);
-                System.Console.WriteLine($"{Player2.Username} won battle\r\n");
+                //System.Console.WriteLine($"{Player2.Username} won battle\r\n");
             }
             else if(Player2.Deck.Count == 0){
                 Player2.Elo += -5;
                 Player1.Elo += 3;
                 Player2.Losses += 1;
                 Player1.Wins += 1;
-                Winner = Player1;
+                log.Add($"{Player1.Username} won the battle");
                 UpdateUser(Player1);
                 UpdateUser(Player2);
-                System.Console.WriteLine($"{Player1.Username} won battle\r\n");
+                //System.Console.WriteLine($"{Player1.Username} won battle\r\n");
             }
             else{
-                System.Console.WriteLine("Draw\r\n");
+                log.Add("Battle was a draw");
+                //System.Console.WriteLine("Draw\r\n");
             }
-            return Winner;
+            return log;
         }
 
         public Card? Fight(Card Card1, Card Card2){

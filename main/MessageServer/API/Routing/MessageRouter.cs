@@ -97,6 +97,8 @@ namespace SWE1.MessageServer.API.Routing
                     { Method: HttpMethod.Get, ResourcePath: "/stats" } => new ShowStatsCommand(_userManager, GetIdentity(request)),
                     { Method: HttpMethod.Get, ResourcePath: "/scoreboard" } => new ShowScoreboardCommand(_userManager, GetIdentity(request)),
                     { Method: HttpMethod.Post, ResourcePath: "/battles" } => new EnterLobbyCommand(_cardManager, _gameManager, GetIdentity(request)),
+                    //Unique feature
+                    { Method: HttpMethod.Get, ResourcePath: "/buy" } => new BuyCoinsCommand(_userManager, GetIdentity(request)),
                     
                     _ => null
                 };

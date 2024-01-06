@@ -41,15 +41,17 @@ namespace SWE1.MessageServer.DAL
                                                             @card3_id, @card4_id, @card5_id)";
         private const string InsertCardsIntoDeckCommand = @"INSERT INTO deck (card1_id, card2_id, card3_id, card4_id, owner_id)    
                                                             VALUES (@card1_id, @card2_id, @card3_id, @card4_id, @owner_id)";
-        private const string GetDeckCommand = @"SELECT * FROM deck WHERE owner_id=@id";
+        private const string DeleteDeckCommand = @"DELETE FROM deck WHERE owner_id=@owner_id";
+        private const string GetDeckCommand = @"SELECT * FROM deck WHERE owner_id=@owner_id";
         private const string SetOwnerIdForCardsCommand = @"UPDATE cards SET owner_id=@owner_id WHERE id=@id";
         private const string BuyPackageCommand = @"SELECT * FROM packages ORDER BY id ASC LIMIT 1";
         private const string DeletePackageCommand = @"DELETE FROM packages WHERE id=@id";
         private const string GetUserIdCommand = @"SELECT id FROM users WHERE username=@username";
         private const string SetUserCoinsCommand = @"UPDATE users SET coins=@coins WHERE username=@username";
         private const string GetUserCoinsCommand = @"SELECT coins FROM users WHERE username=@username";
-        private const string ShowCardsCommand = @"SELECT * FROM cards WHERE owner_id=@id";
+        private const string ShowCardsCommand = @"SELECT * FROM cards WHERE owner_id=@owner_id";
         private const string SelectCardsFromDeck = @"SELECT * FROM cards WHERE id=@id";
+        private const string SelectCardsCommand = @"SELECT * FROM cards WHERE id=@id AND owner_id=@owner_id";
         private readonly string _connectionString;
 
         public DatabaseCardDao(string connectionString)
@@ -184,7 +186,7 @@ namespace SWE1.MessageServer.DAL
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open(); 
             using var cmd = new NpgsqlCommand(ShowCardsCommand, connection);
-            cmd.Parameters.AddWithValue("id", userId);
+            cmd.Parameters.AddWithValue("owner_id", userId);
             var reader = cmd.ExecuteReader();
 
             Card tempCard = new();
@@ -207,7 +209,7 @@ namespace SWE1.MessageServer.DAL
                 using var connection = new NpgsqlConnection(_connectionString);
                 connection.Open(); 
                 using var cmd = new NpgsqlCommand(GetDeckCommand, connection);
-                cmd.Parameters.AddWithValue("id", userId);
+                cmd.Parameters.AddWithValue("owner_id", userId);
                 var reader = cmd.ExecuteReader();
 
                 if(!reader.Read()){
@@ -231,6 +233,7 @@ namespace SWE1.MessageServer.DAL
             try{
                 using var cmd2 = new NpgsqlCommand(SelectCardsFromDeck, connection2);
                 foreach(string id in tempDeck){
+                    System.Console.WriteLine(id);
                     cmd2.Parameters.AddWithValue("id", id);
                 }
                 var reader2 = cmd2.ExecuteReader();
@@ -250,21 +253,48 @@ namespace SWE1.MessageServer.DAL
         }
         public List<Card>? UpdateDeck(User user, List<string> payload){
             int userId = getUserId(user);
-            using var connection = new NpgsqlConnection(_connectionString);
-            connection.Open(); 
-            using var cmd = new NpgsqlCommand(InsertCardsIntoDeckCommand, connection);
-            cmd.Parameters.AddWithValue("card1_id", payload.ElementAt(0));
-            cmd.Parameters.AddWithValue("card2_id", payload.ElementAt(1));
-            cmd.Parameters.AddWithValue("card3_id", payload.ElementAt(2));
-            cmd.Parameters.AddWithValue("card4_id", payload.ElementAt(3));
-            cmd.Parameters.AddWithValue("owner_id", userId);
 
-            var result = cmd.ExecuteNonQuery();
-            if(result > 0){
-                user.Deck = ShowDeck(user)!;
+            try{
+                /*
+                using var conn = new NpgsqlConnection(_connectionString);
+                conn.Open();
+                using var del = new NpgsqlCommand(DeleteDeckCommand, conn);
+                del.Parameters.AddWithValue("owner_id", userId);
+                del.Prepare();
+                del.ExecuteNonQuery();
+                */
+                using var conn2 = new NpgsqlConnection(_connectionString);
+                conn2.Open();
+                for(int i = 0; i < 4; i++){
+                    using var check = new NpgsqlCommand(SelectCardsCommand, conn2);
+                    check.Parameters.AddWithValue("owner_id", userId);
+                    check.Parameters.AddWithValue("id", payload.ElementAt(i));
+                    var ok = check.ExecuteReader();
+                    if(!ok.Read()){
+                        return null;
+                    }
+                    ok.Close();
+                }
+
+                using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open(); 
+                using var cmd = new NpgsqlCommand(InsertCardsIntoDeckCommand, connection);
+                cmd.Parameters.AddWithValue("card1_id", payload.ElementAt(0));
+                cmd.Parameters.AddWithValue("card2_id", payload.ElementAt(1));
+                cmd.Parameters.AddWithValue("card3_id", payload.ElementAt(2));
+                cmd.Parameters.AddWithValue("card4_id", payload.ElementAt(3));
+                cmd.Parameters.AddWithValue("owner_id", userId);
+
+                var result = cmd.ExecuteNonQuery();
+                if(result > 0){
+                    user.Deck = ShowDeck(user)!;
+                }
+                else{
+                    return null;
+                }
             }
-            else{
-                return null;
+            catch(Exception e){
+                System.Console.WriteLine(e);
             }
 
             return user.Deck;

@@ -1,0 +1,31 @@
+Design:
+
+The design choices were based on the input our professor gave us in class, I attempted to emulate the more advanced coding style shown to us.
+Pattern matching was used for the routing of the API endpoints to its specific HTTP commands, the command pattern was used to send HTTP responses back to the client.
+Components were divided into the business level layer which handles the logic of what  is to be done with data received from the data access layer.
+The data access layer takes care of querying the database for the desired information.
+
+Lessons learned:
+
+At the beginning I underestimated this projects size and thought that my experience from C-style languages would be enough to make this an easy task to complete,
+this assumption turned out to be very wrong, it took a lot of time to become familiar with the new C# concepts,
+like the way you work with Lists, Nullables. Lambda functions etc.
+In hindsight I would take more time to write smaller programms and practice new concepts and of course start working on the project earlier.
+
+Unit testing:
+
+The unit testing was mostly about seeing if the special interactions work during the battle and that the functions
+work no matter the order the cards are passed into it.
+I did not use mocking instead I set up every unit test with its own variables.
+
+Unique feature:
+
+The unique feature is a new API endpoint that allows the player to “buy” new coins, by navigating to “localhost:10001/buy”.
+
+Tracked time:
+
+This project took me around 150 hours to finish.
+
+Github:
+
+https://github.com/PaulFHTW/MTCG

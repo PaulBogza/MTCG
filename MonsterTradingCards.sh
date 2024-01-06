@@ -329,5 +329,10 @@ echo .
 curl -i -X GET http://localhost:10001/tradings --header "Authorization: Bearer altenhof-mtcgToken"
 echo .
 
+echo "22) unique feature buy coins"
+curl -i -X GET http://localhost:10001/buy --header "Authorization: Bearer kienboec-mtcgToken"
+echo .
+curl -i -X GET http://localhost:10001/buy --header "Authorization: Bearer altenhof-mtcgToken"
+echo .
 # --------------------------------------------------
 echo "end..."

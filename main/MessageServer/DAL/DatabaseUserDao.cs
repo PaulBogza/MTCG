@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Runtime.ConstrainedExecution;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,8 @@ namespace SWE1.MessageServer.DAL
         private const string SelectStatsCommand = @"SELECT * FROM users WHERE username=@username";
         private const string SelectInfoCommand = @"SELECT userinfo FROM users WHERE username=@username";
         private const string SelectScoreboardCommand = @"SELECT * FROM users ORDER BY elo DESC";
+        private const string SetUserCoinsCommand = @"UPDATE users SET coins=@coins WHERE username=@username";
+        private const string GetUserCoinsCommand = @"SELECT coins FROM users WHERE username=@username";
 
         private readonly string _connectionString;
         private static readonly object _lockObject = new();
@@ -35,8 +38,37 @@ namespace SWE1.MessageServer.DAL
             EnsureTables();
         }
 
-        public bool UpdateUser(User user){
-            return false;
+        public bool BuyCoins(User user){
+            try{
+                using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open();
+                var cmd = new NpgsqlCommand(GetUserCoinsCommand, connection);
+                cmd.Parameters.AddWithValue("username", user.Username);
+                using var reader = cmd.ExecuteReader();
+                if(reader.Read()){
+                    user.Coins = (int)reader["coins"];
+                }
+                else{
+                    return false;
+                }
+                
+                using var connection2 = new NpgsqlConnection(_connectionString);
+                connection2.Open();
+                var cmd2 = new NpgsqlCommand(SetUserCoinsCommand, connection2);
+                cmd2.Parameters.AddWithValue("coins", user.Coins += 5);
+                cmd2.Parameters.AddWithValue("username", user.Username);
+                var result = cmd2.ExecuteNonQuery();
+                if(result > 0){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+            catch(Exception e){
+                System.Console.WriteLine(e);
+                return false;
+            }
         }
         public User? GetUserByAuthToken(string authToken)
         {

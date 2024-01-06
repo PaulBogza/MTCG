@@ -17,8 +17,8 @@ namespace SWE1.MessageServer.BLL
             _userDao = userDao;
         }
 
-        public bool UpdateUser(User user, Dictionary<string, string> UserInfo){
-            return _userDao.UpdateUser(user);
+        public bool UpdateUserInfo(User user, Dictionary<string, string> UserInfo){
+            return _userDao.UpdateUserInfo(user, UserInfo);
         }
         public User GetUserByAuthToken(string authToken)
         {
@@ -43,6 +43,9 @@ namespace SWE1.MessageServer.BLL
         }
         public List<UserStats> ShowScoreboard(){
             return _userDao.ShowScoreboard();
+        }
+        public bool BuyCoins(User user){
+            return _userDao.BuyCoins(user);
         }
     }
 }

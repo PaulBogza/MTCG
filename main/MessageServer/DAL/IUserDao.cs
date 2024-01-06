@@ -12,8 +12,9 @@ namespace SWE1.MessageServer.DAL
         User? GetUserByAuthToken(string authToken);
         User? GetUserByCredentials(string username, string password);
         bool InsertUser(User user);
-        bool UpdateUser(User user);
+        bool UpdateUserInfo(User user, Dictionary<string, string> userinfo);
         User ShowStats(User user);
         List<UserStats> ShowScoreboard();
+        bool BuyCoins(User user);
     }
 }

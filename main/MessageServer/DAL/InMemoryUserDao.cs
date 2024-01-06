@@ -11,7 +11,10 @@ namespace SWE1.MessageServer.DAL
     {
         private readonly List<User> _users = new();
 
-        public bool UpdateUser(User user){
+        public bool BuyCoins(User user){
+            return true;
+        }
+        public bool UpdateUserInfo(User user, Dictionary<string, string> userinfo){
             //user.UserInfo = UserInfo;
             return true;
         }

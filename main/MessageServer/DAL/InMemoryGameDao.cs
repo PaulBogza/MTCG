@@ -23,8 +23,8 @@ namespace SWE1.MessageServer.DAL
         public bool UpdateUser(User user){
             return true;
         }
-        public User StartGame(User Player1, User Player2){
-            User Winner = new User("", "");
+        public List<string> StartGame(User Player1, User Player2){
+             List<string> Winner = new();
             Card? losingCard;
             Card card1 = new();
             Card card2 = new();
@@ -56,7 +56,6 @@ namespace SWE1.MessageServer.DAL
                 Player2.Elo += 3;
                 Player1.Losses += 1;
                 Player2.Wins += 1;
-                Winner = Player2;
                 System.Console.WriteLine($"{Player2.Username} won battle\r\n");
             }
             else if(Player2.Deck.Count == 0){
@@ -64,7 +63,7 @@ namespace SWE1.MessageServer.DAL
                 Player1.Elo += 3;
                 Player2.Losses += 1;
                 Player1.Wins += 1;
-                Winner = Player1;
+                
                 System.Console.WriteLine($"{Player1.Username} won battle\r\n");
             }
             else{
