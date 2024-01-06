@@ -28,9 +28,7 @@ namespace SWE1.MessageServer.API.Routing.Users
         public HttpResponse Execute()
         {
             string token = $"{_currentUser.Username}-mtcgToken";
-            //string adminToken = "admin-mtcgToken";
             User? user;
-            UserStats? stats;
             try
             {
                 user = _userManager.ShowStats(_currentUser);
@@ -50,8 +48,7 @@ namespace SWE1.MessageServer.API.Routing.Users
             }
             else
             {   
-                stats = new(user.Username, user.Elo, user.Wins, user.Losses);
-                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(stats, Formatting.Indented).ToString());
+                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(user.Stats, Formatting.Indented).ToString());
             }
 
             return response;

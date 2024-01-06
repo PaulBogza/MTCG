@@ -11,20 +11,45 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
+using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("UnitTests")]
 
 namespace SWE1.MessageServer.DAL
 {
     internal class DatabaseGameDao : IGameDao
     {  
-        private const string UpdateUserStatsCommand = @"UPDATE user SET elo=@elo, wins=@wins, losses=@losses WHERE username=@username"; 
+        private const string UpdateUserCommand = @"UPDATE users SET elo=@elo, wins=@wins, losses=@losses WHERE username=@username";
+        private const string UpdateUserInfoCommand = @"UPDATE users SET userinfo=@userinfo WHERE username=@username";
+        private const string UpdateUserStatsCommand = @"UPDATE users SET stats=@stats WHERE username=@username";
+        private const string SelectStatsCommand = @"SELECT stats FROM users WHERE username=@username";
+        private const string SelectInfoCommand = @"SELECT userinfo FROM users WHERE username=@username";
         private readonly string _connectionString;
         public DatabaseGameDao(string connectionString){
             _connectionString = connectionString;
         }
         public int Rounds { get; set; } = 1;
         public string? Winner { get; set; } = null;
+        public bool UpdateUser(User user){
+            try{
+                using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open();
 
+                using var cmd = new NpgsqlCommand(UpdateUserCommand, connection);
+                cmd.Parameters.AddWithValue("elo", user.Elo);
+                cmd.Parameters.AddWithValue("wins", user.Wins);
+                cmd.Parameters.AddWithValue("losses", user.Losses);
+                cmd.Parameters.AddWithValue("username", user.Username);
+                var result = cmd.ExecuteNonQuery();
+                if(result > 0){
+                    return true;
+                }
+                return false;
+            }
+            catch(Exception e){
+                System.Console.WriteLine(e);
+                return false;
+            }
+        }
         public User StartGame(User Player1, User Player2){
             User Winner = new User("", "");
             Card? losingCard;
@@ -59,6 +84,8 @@ namespace SWE1.MessageServer.DAL
                 Player1.Losses += 1;
                 Player2.Wins += 1;
                 Winner = Player2;
+                UpdateUser(Player1);
+                UpdateUser(Player2);
                 System.Console.WriteLine($"{Player2.Username} won battle\r\n");
             }
             else if(Player2.Deck.Count == 0){
@@ -67,6 +94,8 @@ namespace SWE1.MessageServer.DAL
                 Player2.Losses += 1;
                 Player1.Wins += 1;
                 Winner = Player1;
+                UpdateUser(Player1);
+                UpdateUser(Player2);
                 System.Console.WriteLine($"{Player1.Username} won battle\r\n");
             }
             else{

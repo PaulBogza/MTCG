@@ -11,8 +11,8 @@ namespace SWE1.MessageServer.DAL
     {
         private readonly List<User> _users = new();
 
-        public bool UpdateUser(User user, Dictionary<string, string> ?UserInfo){
-            user.UserInfo = UserInfo;
+        public bool UpdateUser(User user){
+            //user.UserInfo = UserInfo;
             return true;
         }
         public User? GetUserByAuthToken(string authToken)

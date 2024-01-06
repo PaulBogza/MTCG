@@ -20,7 +20,12 @@ namespace SWE1.MessageServer.DAL
         private const string SelectAllUsersCommand = @"SELECT username, password FROM users";
         private const string SelectUserByCredentialsCommand = "SELECT * FROM users WHERE username=@username AND password=@password";
         private const string InsertUserCommand = @"INSERT INTO users(username, password, elo, wins, losses, coins) VALUES (@username, @password, @elo, @wins, @losses, @coins)";
-        private const string UpdateUserInfo = @"INSERT INTO users (userinfo) WHERE username = @user.username VALUES (@UserInfo)";
+        private const string UpdateUserCommand = @"UPDATE users SET elo=@elo, wins=@wins, losses=@losses WHERE username=@username";
+        private const string UpdateUserInfoCommand = @"UPDATE users SET userinfo=@userinfo WHERE username=@username";
+        private const string UpdateUserStatsCommand = @"UPDATE users SET stats=@stats WHERE username=@username";
+        private const string SelectStatsCommand = @"SELECT * FROM users WHERE username=@username";
+        private const string SelectInfoCommand = @"SELECT userinfo FROM users WHERE username=@username";
+        private const string SelectScoreboardCommand = @"SELECT * FROM users ORDER BY elo DESC";
 
         private readonly string _connectionString;
         private static readonly object _lockObject = new();
@@ -30,15 +35,8 @@ namespace SWE1.MessageServer.DAL
             EnsureTables();
         }
 
-        public bool UpdateUser(User user, Dictionary<string, string> UserInfo){
-            using var connection = new NpgsqlConnection(_connectionString);
-            connection.Open();
-
-            using var cmd = new NpgsqlCommand(UpdateUserInfo, connection);
-
-            cmd.Parameters.AddWithValue("userinfo", UserInfo);
-
-            return true;
+        public bool UpdateUser(User user){
+            return false;
         }
         public User? GetUserByAuthToken(string authToken)
         {
@@ -66,12 +64,89 @@ namespace SWE1.MessageServer.DAL
                 throw new UserNotFoundException();
             }
         }
+        public bool UpdateUserInfo(User user, Dictionary<string, string> userinfo){
+            try{
+                using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open();
+
+                using var cmd = new NpgsqlCommand(UpdateUserInfoCommand, connection);
+                cmd.Parameters.AddWithValue("userinfo", userinfo);
+                cmd.Parameters.AddWithValue("username", user.Username);
+                var result = cmd.ExecuteNonQuery();
+                if(result > 0){
+                    return true;
+                }
+                return false;
+            }
+            catch(Exception e){
+                System.Console.WriteLine(e);
+                return false;
+            }
+        }
         public User ShowStats(User user){
+            try{
+                using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open();
+                
+                using var cmd = new NpgsqlCommand(SelectStatsCommand, connection);
+                cmd.Parameters.AddWithValue("username", user.Username);
+                using var reader = cmd.ExecuteReader();
+                
+                while(reader.Read()){
+                    user.Stats["Name"] = reader["username"];
+                    user.Stats["Elo"] = reader["elo"];
+                    user.Stats["Wins"] = reader["wins"];
+                    user.Stats["Losse"] = reader["losses"];
+                }
+            }
+            catch(Exception e){
+                System.Console.WriteLine(e);
+            }
+            return user;
+        }
+        public User ShowUserinfo(User user){
+            try{
+                using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open();
+                
+                using var cmd = new NpgsqlCommand(SelectInfoCommand, connection);
+                cmd.Parameters.AddWithValue("username", user.Username);
+                using var reader = cmd.ExecuteReader();
+                
+                if(reader.Read()){
+                    user.UserInfo = (Dictionary<string, string>)reader["userinfo"];
+                }
+            }
+            catch(Exception e){
+                System.Console.WriteLine(e);
+            }
             return user;
         }
         public List<UserStats> ShowScoreboard(){
-            //select * from users order by elo descending
             List<UserStats> Scoreboard = new();
+            try{
+                using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open();
+                
+                using var cmd = new NpgsqlCommand(SelectScoreboardCommand, connection);
+                using var reader = cmd.ExecuteReader();
+                
+                string username;
+                int elo;
+                int wins;
+                int losses;
+                while(reader.Read()){
+                    username = (string)reader["username"];
+                    elo = (int)reader["elo"];
+                    wins = (int)reader["wins"];
+                    losses = (int)reader["losses"];
+                    UserStats temp = new(username, elo, wins, losses);
+                    Scoreboard.Add(temp);
+                }   
+            }
+            catch(Exception e){
+                System.Console.WriteLine(e);
+            }
             return Scoreboard;
         }
         public bool InsertUser(User user)
