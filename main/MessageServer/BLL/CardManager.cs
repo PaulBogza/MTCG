@@ -47,8 +47,7 @@ namespace SWE1.MessageServer.BLL
         }
 
         public List<Card> ParseCards(User user){
-            user.Deck = _cardDao.ShowCards(user);
-            System.Console.WriteLine(user.Deck.Count);
+            user.Deck = _cardDao.ShowDeck(user)!;
               foreach(var card in user.Deck){
                 if(card.Name != null){
                     if(card.Name.Contains("Water")){

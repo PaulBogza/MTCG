@@ -61,7 +61,7 @@ namespace SWE1.MessageServer.API.Routing.Game
                 }
                 if(_battleLog.TryGetValue(_player, out var result) && result != null){
                     _battleLog.Remove(_player, out _);
-                    return new HttpResponse(StatusCode.Ok);//, JsonConvert.SerializeObject(_log, Formatting.Indented).ToString());
+                    return new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(_log, Formatting.Indented).ToString());
                 }
                 
                 Thread.Sleep(100);

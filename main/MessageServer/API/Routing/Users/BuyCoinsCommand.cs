@@ -42,7 +42,7 @@ namespace SWE1.MessageServer.API.Routing.Users
             }
             else
             {   
-                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject(_currentUser.Coins, Formatting.Indented).ToString());
+                response = new HttpResponse(StatusCode.Ok, JsonConvert.SerializeObject($"{_currentUser.Username} bought {_currentUser.Coins} more coins", Formatting.Indented).ToString());
             }
 
             return response;
