@@ -57,7 +57,7 @@ namespace SWE1.MessageServer.DAL
 
             //System.Console.WriteLine(Player1.Deck.Count);
             //System.Console.WriteLine(Player2.Deck.Count);
-            while(Player1.Deck.Count > 0 && Player2.Deck.Count > 0 && Rounds < 20){
+            while(Player1.Deck.Count > 0 && Player2.Deck.Count > 0 && Rounds < 100){
                 card1 = Player1.Deck.First();
                 card2 = Player2.Deck.First();
                 losingCard = Fight(card1, card2);

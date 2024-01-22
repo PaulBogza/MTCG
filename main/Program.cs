@@ -18,7 +18,7 @@ namespace myMTCG{
             var connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=mydb";
             var conn = new NpgsqlConnection(connectionString);
             conn.Open();
-            using var cmd = new NpgsqlCommand("DROP TABLE IF EXISTS packages; DROP TABLE IF EXISTS deck; DROP TABLE IF EXISTS cards; DROP TABLE IF EXISTS users;", conn);
+            using var cmd = new NpgsqlCommand("DROP TABLE IF EXISTS packages; DROP TABLE IF EXISTS deck; DROP TABLE IF EXISTS cards CASCADE; DROP TABLE IF EXISTS users;", conn);
             cmd.ExecuteNonQuery();
 
             IGameDao gameDao = new DatabaseGameDao(connectionString);
